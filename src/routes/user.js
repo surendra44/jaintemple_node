@@ -16,6 +16,7 @@ router.post('/login', validate(userValidation.login),userController.login);
 router.post('/templeRegister',validate(userValidation.registerTemple),verifyToken.checkSuperAdmin,templeController.registerTemple);
 
 router.put('/updateUser/:userId',validate(userValidation.updateUser),verifyToken.checkSuperAdmin,userController.updateUser);
+// router.put('/updateTemple/:userId',validate(userValidation.updateTemple),verifyToken.checkSuperAdmin,templeController.updateTemple);
 
 
 
