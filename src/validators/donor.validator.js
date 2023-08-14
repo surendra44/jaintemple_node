@@ -49,7 +49,7 @@ export const createDonor = {
         aadharcardnumber: Joi.string().required(),
         aadharCardImage: Joi.string().allow(''),
         bloodGroup: Joi.string().required(),
-        address: addressSchema,
+        // address: addressSchema,
         members: Joi.array().items(memberSchema)
     }),
   };
@@ -70,7 +70,7 @@ export const createDonor = {
         aadharcardnumber: Joi.string().required(),
         aadharCardImage: Joi.string().allow(''),
         bloodGroup: Joi.string().required(),
-        address: addressSchema,
+        // address: addressSchema,
         members: Joi.array().items(memberSchema)
       })
   };

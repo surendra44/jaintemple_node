@@ -2,6 +2,13 @@ import Joi from "joi";
 const { password ,objectId} = require('./custom.validation');
 
 
+const phoneNumberSchema = Joi.object({
+  Phonenumber1: Joi.string().pattern(new RegExp('^[0-9]{10}$')).required(),
+  Phonenumber2: Joi.string().pattern(new RegExp('^[0-9]{10}$')).allow('')
+});
+
+
+
 
 const addressSchema = Joi.object({
   line_1: Joi.string().required(),
@@ -48,4 +55,13 @@ export const createUser = {
         address: addressSchema,
         phonenumber: Joi.number(),
       })
+  };
+
+
+  export const registerTemple = {
+    body: Joi.object().keys({
+      name: Joi.string().required(),
+      address: addressSchema,
+      phoneNumbers: Joi.array().items(phoneNumberSchema).required()
+    }),
   };

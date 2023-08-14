@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 
 const templeDetailSchema = new mongoose.Schema({
-  Name: {
+  name: {
     type: String,
     required: true,
   },
-  PhoneNumber: {
+  phoneNumber: {
     Phonenumber1: String,
     Phonenumber2: String,
   },
-  Address: {
+  address: {
     line_1: String,
     line_2: String,
     line_3: String,
