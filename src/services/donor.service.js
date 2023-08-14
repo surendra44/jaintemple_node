@@ -118,7 +118,10 @@ const updateDonor = async (id ,userCreateadBy,donorInfo, membersInfo) => {
 
 const getDonorByIdWithMembers = async (donorId) => {
     try {
-      const donor = await Donar.findById(donorId).populate('members');
+      const donor = await Donar.findById(donorId).select('-createdBy -updatedBy -__v  -IsActive -createdAt -updatedAt ').populate({
+        path: 'members',
+        select: '-createdBy -updatedBy  -__v -createdAt   -updatedAt -address    ',
+      });
       return donor;
     } catch (error) {
       throw new Error('Unable to fetch donor by ID');

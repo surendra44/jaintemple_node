@@ -9,7 +9,7 @@ const addressSchema = Joi.object({
     line_3: Joi.string().allow(''),
     city: Joi.string().required(),
     state: Joi.string().required(),
-    pincode: Joi.string().required(),
+    pincode: Joi.number().required(),
     country: Joi.string().required()
   });
 
@@ -32,7 +32,7 @@ const phoneNumberSchema = Joi.object({
     aadharCardNo: Joi.string().allow(''),
     aadharCardImage: Joi.string().allow(''),
     bloodGroup: Joi.string().required(),
-    address: addressSchema
+    // address: addressSchema
   });
 
 
@@ -46,10 +46,10 @@ export const createDonor = {
         dob: Joi.date().iso().required(),
         occupation: Joi.string().required(),
         email: Joi.string().email().required(),
-        aadharcardnumber: Joi.string().required(),
+        aadharCardNo: Joi.string().allow(''),
         aadharCardImage: Joi.string().allow(''),
         bloodGroup: Joi.string().required(),
-        // address: addressSchema,
+        address: addressSchema,
         members: Joi.array().items(memberSchema)
     }),
   };
@@ -70,7 +70,7 @@ export const createDonor = {
         aadharcardnumber: Joi.string().required(),
         aadharCardImage: Joi.string().allow(''),
         bloodGroup: Joi.string().required(),
-        // address: addressSchema,
+        address: addressSchema,
         members: Joi.array().items(memberSchema)
       })
   };

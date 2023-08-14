@@ -32,7 +32,7 @@ const familySchema = mongoose.Schema(
     occupation: {
       type: String,
     },
-    aadharCardNo: {
+    aadharNo: {
       type: String,
     },
     aadharCardImage: {
