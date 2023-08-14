@@ -62,6 +62,6 @@ export const createUser = {
     body: Joi.object().keys({
       name: Joi.string().required(),
       address: addressSchema,
-      phoneNumbers: Joi.array().items(phoneNumberSchema).required()
+      phoneNumber: Joi.array().items(phoneNumberSchema).required()
     }),
   };

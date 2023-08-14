@@ -67,7 +67,7 @@ export const createDonor = {
         dob: Joi.date().iso().required(),
         occupation: Joi.string().required(),
         email: Joi.string().email().required(),
-        aadharcardnumber: Joi.string().required(),
+        aadharCardNo: Joi.string().required(),
         aadharCardImage: Joi.string().allow(''),
         bloodGroup: Joi.string().required(),
         address: addressSchema,

@@ -120,7 +120,7 @@ const getDonorByIdWithMembers = async (donorId) => {
     try {
       const donor = await Donar.findById(donorId).select('-createdBy -updatedBy -__v  -IsActive -createdAt -updatedAt ').populate({
         path: 'members',
-        select: '-createdBy -updatedBy  -__v -createdAt   -updatedAt -address    ',
+        select: '-createdBy -updatedBy  -_id -isActive -user_detail -__v -createdAt   -updatedAt -address    ',
       });
       return donor;
     } catch (error) {
