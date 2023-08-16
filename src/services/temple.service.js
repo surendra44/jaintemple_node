@@ -13,4 +13,49 @@ export const addtemple = async (templeData) =>{
         throw new Error(e);
     }
   }
+
+
+  export const updateTemple= async (templeId, updatedData) =>{
+      try {
+        const updatedTemple = await TempleDetail.findByIdAndUpdate(templeId,updatedData,
+          { new: true }
+        );
+        return updatedTemple;
+    } catch (e) {
+        console.log(e);
+        throw new Error(e);
+    }
+  }
+
+
   
+  export const deleteTemple = async(templeId)=> {
+    try {
+      const deletedTemple = await TempleDetail.findByIdAndDelete(templeId);
+      const message = "temple unregister Successfully"
+      return message;
+    } catch (e) {
+      console.log(e);
+      throw new Error(e);
+  }
+  }
+  
+  export const getTempleById = async(templeId)=> {
+    try {
+      const result = await TempleDetail.findById(templeId);
+      return result;
+    } catch (e) {
+      console.log(e);
+      throw new Error(e);
+  }
+  }
+
+  export const getAllTemples =  async()=> {
+    try {
+      const result = await TempleDetail.find();
+      return result;
+    } catch (e) {
+      console.log(e);
+      throw new Error(e);
+  }
+  }

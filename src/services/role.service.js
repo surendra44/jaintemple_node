@@ -33,3 +33,16 @@ export const getAllRoles = async () => {
     }
 };
 
+
+export const deleteRole = async (id) => {
+    try {
+        const DeleteRole = await Role.findByIdAndDelete(id);
+        if(!DeleteRole) throw new Error(ERROR_MESSAGE.NOT_FOUND);
+        const message = "Deleted Successfully"
+        return message;
+    }
+    catch (e) {
+        console.log(e);
+        throw new Error(e);
+    }
+};
