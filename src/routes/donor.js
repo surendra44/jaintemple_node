@@ -9,7 +9,7 @@ const router = express.Router({ mergeParams: true });
 router.post('/donarRegister',verifyToken.checkSuperAdmin,donorController.registerDonor);
 router.get('/getdonor/:id',verifyToken.checkSuperAdmin,validate(donorValidation.getDonorById),donorController.getDonorById);
 router.get('/getalldonor',verifyToken.checkSuperAdmin,donorController.getAllDonors);
-router.put('/donarupdate/:userId',verifyToken.checkSuperAdmin,validate(donorValidation.updateDonor),donorController.updateDonarInfo);
+router.put('/donarupdate/:id',verifyToken.checkSuperAdmin ,donorController.updateDonarInfo);
 
 // 
 // validate(donorValidation.createDonor)

@@ -19,23 +19,11 @@ export const registerDonor = async (req, res) => {
     }
 };
 
-// const updateDonor = async (req, res) => {
-//   const donorId = req.params.id;
-//   const { donorData, memberData } = req.body;
-//   try {
-//     const result = await donorService.updateDonorAndMembers(donorId, donorData, memberData);
-//     res.json(result);
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// };
-
-
 
 export const updateDonarInfo = async (req, res) => {
   const userCreateadBy = req.userId;
   console.log(userCreateadBy)
-  const id = req.params.userId
+  const id = req.params.id
   const { members, ...rest } = req.body;
   const donorInfo = rest;
   const membersInfo = members;
@@ -46,9 +34,6 @@ export const updateDonarInfo = async (req, res) => {
         return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
       }
   };
-
-
-// sddsdfdf
 
 
 export const getAllDonors = async (req, res) => { try {
@@ -69,13 +54,7 @@ export const getAllDonors = async (req, res) => { try {
 
   const sortingOptions = sort ? sort.split(",") : ["_id", "asc"];
   const sortBy = { [sortingOptions[0]]: sortingOptions[1] };
-
-  const result = await donorService.getAllDonorsWithMembers(
-    paginationOptions,
-    filter,
-    sortBy
-  );
-
+  const result = await donorService.getAllDonorsWithMembers(paginationOptions,filter,sortBy);
   return successResponse(req, res, result);
 } catch (error) {
   res.status(500).json({ error: 'Internal server error' });

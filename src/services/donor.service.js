@@ -37,38 +37,43 @@ const updateDonor = async (id ,userCreateadBy,donorInfo, membersInfo) => {
     try{
         console.log(donorInfo);
         const filter = { _id: id };
+        // delete donorInfo._id
         const update = { $set: donorInfo,updatedBy: userCreateadBy };
-        console.log(id);
+        console.log("sasdff"+id);
     const donar = await Donar.findOneAndUpdate( filter,update); 
-    console.log(donar);
-    let result = [];
-  if (membersInfo.length > 0) {
-     result = await Promise.all(
-      membersInfo.map(async (member) => {
-        const filter = { phoneNumber: member.phoneNumber };
-        const update = {
-          $set: {
-            ...member,
-            user_detail: donar._id,
-            ...(member._id
-              ? { updatedBy: userCreateadBy ,createdBy : userCreateadBy}
-              : { updatedBy: userCreateadBy }),
-          },
-        };
-        const options = { upsert: true, new: true };
-        const updateOrCreateMember = await Family.findOneAndUpdate(filter, update, options);
-        console.log('Member processed:', updateOrCreateMember);
-        return updateOrCreateMember;
-      })
-    )
-    console.log('Processed members:', result);
-    const memberIds = result.map(member => member._id);
-    console.log(memberIds);
-    Object.assign(donar, { members: memberIds });
+    let memberIds = [];
+    const existingMembers = []
+    const newMembers = [];
+
+    for (const member of membersInfo) {
+      if (member._id) {
+        existingMembers.push({ ...member, updatedBy: userCreateadBy });
+        memberIds.push(member._id);
+      } else {
+        newMembers.push({ ...member, updatedBy: userCreateadBy, createdBy: userCreateadBy,user_detail:id});
+      }
+    }
+
+    if (existingMembers.length > 0) {
+      for(const member of existingMembers ){
+        const filter = { _id: { $in: memberIds }};
+        delete member._id;
+        const update = { $set: member };
+        await Family.updateOne(filter,update)
+      }
+    }
+    
+    if(newMembers.length >0){
+      const newfamilymember = await Family.insertMany(newMembers);
+      newfamilymember.map((member) => memberIds.push(member._id));
+    }
+    
+    
+    Object.assign(donar,{members:memberIds})
     await donar.save();
-  }
-       result = { success: true, message: 'Donor updated successfully.', mainDonar: donar, familyMembers: result };
-       return result;
+
+       return{ success: true, message: 'Donor updated successfully.', mainDonar: donar, familyMembers: memberIds };
+      
     }  catch (e) {
       console.log(e);
       throw new Error(e);
@@ -141,9 +146,9 @@ const getAllDonorsWithMembers = async (paginationOptions, filter, sortBy) => {
 
 const getDonorByIdWithMembers = async (donorId) => {
     try {
-      const donor = await Donar.findById(donorId).select('-createdBy -updatedBy -__v  -IsActive -createdAt -updatedAt ').populate({
+      const donor = await Donar.findById(donorId).select('-createdBy -updatedBy -__v  -createdAt -updatedAt ').populate({
         path: 'members',
-        select: '-createdBy -updatedBy  -_id -isActive -user_detail -__v -createdAt   -updatedAt -address    ',
+        select: '-createdBy -updatedBy  -user_detail -__v -createdAt   -updatedAt -address    ',
       });
       return donor;
     } catch (error) {
