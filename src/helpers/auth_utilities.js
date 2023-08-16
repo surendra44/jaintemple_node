@@ -37,7 +37,7 @@ export const decodeBearerToken = (req) => {
 
 export const createUserToken = (userId) => {
   console.log("inside genrate token")
-  const accessToken = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '55m' });
+  const accessToken = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '3d' });
   console.log("inside genrate token" +accessToken)
   return accessToken;
 };

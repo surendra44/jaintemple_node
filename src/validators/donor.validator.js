@@ -21,6 +21,7 @@ const phoneNumberSchema = Joi.object({
 
 
   const memberSchema = Joi.object({
+    _id: Joi.string().custom(objectId).allow(''),
     image: Joi.string().allow(''),
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
@@ -32,7 +33,7 @@ const phoneNumberSchema = Joi.object({
     aadharNo: Joi.string().allow(''),
     aadharCardImage: Joi.string().allow(''),
     bloodGroup: Joi.string().required(),
-    // address: addressSchema
+    isActive:Joi.boolean().allow(),
   });
 
 
@@ -56,7 +57,7 @@ export const createDonor = {
 
   export const updateDonor = {
     params: Joi.object().keys({
-      userId: Joi.required().custom(objectId),
+      id: Joi.required().custom(objectId),
     }),
     body: Joi.object()
       .keys({
@@ -71,7 +72,8 @@ export const createDonor = {
         aadharCardImage: Joi.string().allow(''),
         bloodGroup: Joi.string().required(),
         address: addressSchema,
-        members: Joi.array().items(memberSchema)
+        members: Joi.array().items(memberSchema),
+        isActive:Joi.boolean(),
       })
   };
 

@@ -52,7 +52,7 @@ const donerSchema = mongoose.Schema(
             country: { type: String },
         },
         members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Family' }],
-        IsActive: {
+        isActive: {
             type: Boolean,
             default: true,
         },
