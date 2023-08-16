@@ -9,7 +9,7 @@ export const createEvent = {
         StartDate: Joi.date().iso().required(),
         EndDate: Joi.date().iso().required(),
         TempleID: Joi.string().required(),
-        EventCategory: Joi.string().required(),
+        EventCategory: Joi.array().required(),
     }),
   };
 
@@ -26,7 +26,7 @@ export const createEvent = {
         StartDate: Joi.date().iso().required(),
         EndDate: Joi.date().iso().required(),
         TempleID: Joi.string().required(),
-        EventCategory: Joi.string().required(),
+        EventCategory: Joi.array().required(),
       })
   };
 
