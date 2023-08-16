@@ -74,3 +74,10 @@ export const createDonor = {
         members: Joi.array().items(memberSchema)
       })
   };
+
+
+  export const getDonorById = {
+    params: Joi.object().keys({
+      id: Joi.required().custom(objectId),
+    }),
+  };

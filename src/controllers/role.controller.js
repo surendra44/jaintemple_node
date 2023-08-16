@@ -37,4 +37,13 @@ export const getAllRoles = async (req, res) => {
 
 
 
- 
+export const deleteRole = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await roleService.deleteRole(id);
+    if(result)
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};

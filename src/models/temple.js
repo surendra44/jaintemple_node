@@ -5,10 +5,12 @@ const templeDetailSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  phoneNumber: {
-    Phonenumber1: String,
-    Phonenumber2: String,
-  },
+  phoneNumber: [
+    {
+        Phonenumber1: String,
+        Phonenumber2: String
+    }
+],
   address: {
     line_1: String,
     line_2: String,

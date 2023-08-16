@@ -13,24 +13,60 @@ export const registerTemple = async (req, res) => {
   }
 }
 
-// updateTemple
 
-// export const updateDonarInfo = async (req, res) => {
-//   const userCreateadBy = req.userId;
-//   console.log(userCreateadBy)
-//   const id = req.params.userId
-//   const { members, ...rest } = req.body;
-//   const donorInfo = rest;
-//   const membersInfo = members;
+
+export const updateTemple = async (req, res) => {
+  const templeId = req.params.id;
+  const updatedData = req.body;
+  try {
+      const result = await templeService.updateTemple(templeId, updatedData);
+      return successResponse(req, res, result);
+    } catch (error) {
+        return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+      }
+
+  };
+
+
+  export const deleteTemple = async (req, res) => {
+    try {
+      const templeId = req.params.id;
+      const result = await templeService.deleteTemple(templeId);
+      if (!result) {
+        return errorResponse(req, res, httpStatus.NOT_FOUND, error.message);
+      }
+      return successResponse(req, res, result);
+    } catch (error) {
+      return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+    }
+  }
+
+  export const getTempleById = async(req, res)=> {
+    try {
+      const templeId = req.params.id;
+      const result = await templeService.getTempleById(templeId);
+      if (!result) {
+        return errorResponse(req, res, httpStatus.NOT_FOUND, error.message);
+      }
+      return successResponse(req, res, result);
+    } catch (error) {
+      return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+    }
+  }
+
+
+  export const getAllTemples = async(req, res)=>  {
+    try {
+      const result = await templeService.getAllTemples();
+      if (!result) {
+        return errorResponse(req, res, httpStatus.NOT_FOUND, error.message);
+      }
+      return successResponse(req, res, result);
+    } catch (error) {
+      return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+    }
+  }
   
-//   try {
-//       const result = await donorService.updateDonor(id,userCreateadBy,donorInfo, membersInfo);
-//       return successResponse(req, res, result);
-//     } catch (error) {
-//         return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
-//       }
-//   };
 
-
-
+  
 

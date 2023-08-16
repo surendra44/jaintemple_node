@@ -65,3 +65,29 @@ export const createUser = {
       phoneNumber: Joi.array().items(phoneNumberSchema).required()
     }),
   };
+
+  export const deleteTemple = {
+  params: Joi.object().keys({
+    id: Joi.required().custom(objectId),
+  }),
+}
+
+
+export const updateTemple = {
+  params: Joi.object().keys({
+    id: Joi.required().custom(objectId),
+  }),
+  body: Joi.object()
+      .keys({
+        name: Joi.string().required(),
+        address: addressSchema,
+        phoneNumber: Joi.array().items(phoneNumberSchema).required()
+      })
+}
+
+
+export const getTempleById = {
+  params: Joi.object().keys({
+    id: Joi.required().custom(objectId),
+  }),
+}
