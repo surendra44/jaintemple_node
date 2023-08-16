@@ -4,28 +4,34 @@ const Family = require('../models/family');
 const ObjectID = require('mongodb').ObjectId;
 
 
-// const registerDonor = async (members,...rest) => {
-// const mainDonarInfo = { ...rest, createdBy: new mongoose.Types.ObjectId(userCreateadBy), updatedBy: new mongoose.Types.ObjectId(userCreateadBy) };
-//   const newMainUser = await Donar.create(mainDonarInfo);
-//   const createFamilyMember = await createFamilyMembers(newMainUser._id, members, userCreateadBy);
-//   if (createFamilyMember.success) {
-//     const memberIds = createFamilyMember.data.map((member) => new mongoose.Types.ObjectId(member._id));
-//     Object.assign(newMainUser, { members: memberIds });
-//     newMainUser.save();
-//   }
-//   return({ success: true,message: createFamilyMember.message, mainDonar: newMainUser, familyMembers: createFamilyMember });
-// };
+const registerDonor =async (userCreateadBy,members,mainDonarInfo) => {
+  try{
+  const newMainUser = await Donar.create(mainDonarInfo);
+  const createFamilyMember = await createFamilyMembers(newMainUser._id, members, userCreateadBy);
+  if (createFamilyMember.success) {
+    const memberIds = createFamilyMember.data.map((member) => new mongoose.Types.ObjectId(member._id));
+    Object.assign(newMainUser, { members: memberIds });
+    newMainUser.save();
+  }
+  return({ success: true,message: createFamilyMember.message, mainDonar: newMainUser, familyMembers: createFamilyMember });
+  }catch (e) {
+    console.log(e);
+    throw new Error(e);
+}
 
-// const createFamilyMembers = async (userId, members,userCreateadBy) => {
-//     const membersInfo = members.map((member) =>({...member, user_detail: new mongoose.Types.ObjectId(userId),
-//       createdBy: new mongoose.Types.ObjectId(userCreateadBy), updatedBy: new mongoose.Types.ObjectId(userCreateadBy)}));
-//     try {
-//         const result = await Family.insertMany(membersInfo);
-//         return ({ success: true, data: result, message: '' });
-//     } catch (error) {
-//         return ({ success: false, message: 'There was a problem adding members please check the info again.' });
-//     }
-// }
+}
+
+const createFamilyMembers = async (userId, members,userCreateadBy) => {
+       const membersInfo = members.map((member) =>({...member, user_detail: new mongoose.Types.ObjectId(userId),
+        createdBy: new mongoose.Types.ObjectId(userCreateadBy), updatedBy: new mongoose.Types.ObjectId(userCreateadBy)}));
+      try {
+          const result = await Family.insertMany(membersInfo);
+          return ({ success: true, data: result, message: '' });
+      } catch (error) {
+          return ({ success: false, message: 'There was a problem adding members please check the info again.' });
+      }
+  }
+
 
 const updateDonor = async (id ,userCreateadBy,donorInfo, membersInfo) => {
     try{
@@ -129,7 +135,7 @@ const getDonorByIdWithMembers = async (donorId) => {
   };
   
 module.exports = {
-  // registerDonor,
+  registerDonor,
   updateDonor,
   getAllDonorsWithMembers,
   getDonorByIdWithMembers
