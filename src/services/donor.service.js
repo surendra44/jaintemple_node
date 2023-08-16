@@ -110,15 +110,32 @@ const updateDonor = async (id ,userCreateadBy,donorInfo, membersInfo) => {
 
 
 
-
-  const getAllDonorsWithMembers = async () => {
+const getAllDonorsWithMembers = async (paginationOptions, filter, sortBy) => {
   try {
-    const result = await Donar.find().populate('members');
-    return result;
+    const { page, size } = paginationOptions;
+
+    const totalDocuments = await Donar.countDocuments(filter);
+    const totalPages = Math.ceil(totalDocuments / size);
+    const skip = (page - 1) * size;
+
+    const result = await Donar.find(filter)
+      .sort(sortBy)
+      .skip(skip)
+      .limit(size)
+      .populate('members');
+
+    return {
+      page,
+      size,
+      data: result,
+      previousPage: page > 1 ? page - 1 : null,
+      nextPage: page < totalPages ? page + 1 : null,
+      totalDocuments,
+    };
   } catch (e) {
     console.log(e);
     throw new Error(e);
-}
+  }
 };
 // fghdfhdfhfgd
 
