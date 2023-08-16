@@ -6,12 +6,12 @@ const donorValidation = require('../validators/donor.validator');
 
 const router = express.Router({ mergeParams: true });
 
-router.post('/donarRegister',verifyToken.checkSuperAdmin,validate(donorValidation.createDonor),donorController.registerDonor);
+router.post('/donarRegister',verifyToken.checkSuperAdmin,donorController.registerDonor);
 router.get('/getdonor/:id',verifyToken.checkSuperAdmin,validate(donorValidation.getDonorById),donorController.getDonorById);
 router.get('/getalldonor',verifyToken.checkSuperAdmin,donorController.getAllDonors);
 router.put('/donarupdate/:userId',verifyToken.checkSuperAdmin,validate(donorValidation.updateDonor),donorController.updateDonarInfo);
 
 // 
-
+// validate(donorValidation.createDonor)
 export default router;
 

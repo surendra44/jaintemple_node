@@ -21,32 +21,30 @@ const { donorService } = require('../services');
 // };
 
 export const registerDonor = async (req, res) => {
-    const userCreateadBy = req.userId;
-    console.log(userCreateadBy)
-    const{ members, ...rest } = req.body;
-    const mainDonarInfo = { ...rest, createdBy: new mongoose.Types.ObjectId(userCreateadBy), updatedBy: new mongoose.Types.ObjectId(userCreateadBy) };
-    const newMainUser = await Donar.create(mainDonarInfo);
-    const createFamilyMember = await createFamilyMembers(newMainUser._id, members, userCreateadBy);
-    if (createFamilyMember.success) {
-      const memberIds = createFamilyMember.data.map((member) => new mongoose.Types.ObjectId(member._id));
-      Object.assign(newMainUser, { members: memberIds });
-      newMainUser.save();
-    }
-    res.send({ message: createFamilyMember.message, mainDonar: newMainUser, familyMembers: createFamilyMember });
-  };
-  
-  const createFamilyMembers = async (userId, members,userCreateadBy) => {
-      const membersInfo = members.map((member) =>({...member, user_detail: new mongoose.Types.ObjectId(userId),
-        createdBy: new mongoose.Types.ObjectId(userCreateadBy), updatedBy: new mongoose.Types.ObjectId(userCreateadBy)}));
-      try {
-          const result = await Family.insertMany(membersInfo);
-          return ({ success: true, data: result, message: '' });
-      } catch (error) {
-          return ({ success: false, message: 'There was a problem adding members please check the info again.' });
-      }
+  const userCreateadBy = req.userId;
+  console.log(userCreateadBy)
+  const{ members, ...rest } = req.body;
+  const mainDonarInfo = { ...rest, createdBy: new mongoose.Types.ObjectId(userCreateadBy), updatedBy: new mongoose.Types.ObjectId(userCreateadBy) };
+  const newMainUser = await Donar.create(mainDonarInfo);
+  const createFamilyMember = await createFamilyMembers(newMainUser._id, members, userCreateadBy);
+  if (createFamilyMember.success) {
+    const memberIds = createFamilyMember.data.map((member) => new mongoose.Types.ObjectId(member._id));
+    Object.assign(newMainUser, { members: memberIds });
+    newMainUser.save();
   }
+  res.send({ message: createFamilyMember.message, mainDonar: newMainUser, familyMembers: createFamilyMember });
+};
 
-
+const createFamilyMembers = async (userId, members,userCreateadBy) => {
+    const membersInfo = members.map((member) =>({...member, user_detail: new mongoose.Types.ObjectId(userId),
+      createdBy: new mongoose.Types.ObjectId(userCreateadBy), updatedBy: new mongoose.Types.ObjectId(userCreateadBy)}));
+    try {
+        const result = await Family.insertMany(membersInfo);
+        return ({ success: true, data: result, message: '' });
+    } catch (error) {
+        return ({ success: false, message: 'There was a problem adding members please check the info again.' });
+    }
+}
 
 // const updateDonor = async (req, res) => {
 //   const donorId = req.params.id;
