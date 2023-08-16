@@ -18,7 +18,7 @@ const eventDetailSchema = new mongoose.Schema({
     ref: 'TempleDetail',
   },
   EventCategory: {
-    type: String,
+    type: Array,
     // You can specify any additional validation or options here
   },
 });
