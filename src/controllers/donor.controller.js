@@ -39,7 +39,6 @@ export const updateDonarInfo = async (req, res) => {
   const { members, ...rest } = req.body;
   const donorInfo = rest;
   const membersInfo = members;
-  
   try {
       const result = await donorService.updateDonor(id,userCreateadBy,donorInfo, membersInfo);
       return successResponse(req, res, result);
@@ -52,13 +51,35 @@ export const updateDonarInfo = async (req, res) => {
 // sddsdfdf
 
 
-export const getAllDonors = async (req, res) => {
-  try {
-    const result = await donorService.getAllDonorsWithMembers();
-    return successResponse(req, res, result);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
+export const getAllDonors = async (req, res) => { try {
+  const { page, size, search,sort } = req.query;
+
+  const paginationOptions = {
+    page: parseInt(page) || 1,
+    size: parseInt(size) || 10,
+  };
+
+  const filter = {
+    $or: [
+      { firstName: { $regex: search || "", $options: "i" } },
+      { "phoneNumbers.Phonenumber1": { $regex: search || "", $options: "i" } },
+      { "phoneNumbers.Phonenumber2": { $regex: search || "", $options: "i" } },
+    ],
+  };
+
+  const sortingOptions = sort ? sort.split(",") : ["_id", "asc"];
+  const sortBy = { [sortingOptions[0]]: sortingOptions[1] };
+
+  const result = await donorService.getAllDonorsWithMembers(
+    paginationOptions,
+    filter,
+    sortBy
+  );
+
+  return successResponse(req, res, result);
+} catch (error) {
+  res.status(500).json({ error: 'Internal server error' });
+}
 };
 
 export const getDonorById = async (req, res) => {
