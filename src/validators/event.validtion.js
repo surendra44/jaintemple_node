@@ -17,7 +17,7 @@ export const createEvent = {
 
   export const updateEvent = {
     params: Joi.object().keys({
-      userId: Joi.required().custom(objectId),
+      id: Joi.required().custom(objectId),
     }),
     body: Joi.object()
       .keys({

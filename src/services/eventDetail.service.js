@@ -30,7 +30,7 @@ export const addEventDetail= async (eventData)=> {
 
   export const deleteEventDetail= async(eventId)=>{
     try {
-      const DeleteEvent = await EventDetail.findByIdAndDelete(eventId);
+      const DeleteEvent = await EventDetail.findByIdAndDelete(eventId).select('-_id');;
       if(!DeleteEvent) throw new Error(ERROR_MESSAGE.NOT_FOUND);
       const message = "Deleted Successfully"
       return message;
