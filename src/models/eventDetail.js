@@ -23,6 +23,7 @@ const eventDetailSchema = new mongoose.Schema({
   }],
 });
 
+// ddddda
 const EventDetail = mongoose.model('EventDetail', eventDetailSchema);
 
 module.exports = EventDetail;
