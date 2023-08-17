@@ -32,20 +32,20 @@ export const updateExpCategory = async (req, res) => {
 
 
 
-export const  deleteDonation= async (req, res) => {
+export const  deleteexpCategory= async (req, res) => {
     try {
-      const donationId = req.params.id;
-      const result = await donationService.deleteDonation(donationId);
+      const expCategoryId = req.params.id;
+      const result = await expenseCategoryService.deleteexpCategory(expCategoryId);
       return successResponse(req, res, result);
     } catch (error) {
         return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
       }
   }
 
-  export const getDoationById = async(req, res)=> {
+  export const getExpCategoryById = async(req, res)=> {
     try {
-      const donationId = req.params.id;
-      const result = await donationService.getDoationById(donationId);
+      const expCategoryId = req.params.id;
+      const result = await expenseCategoryService.getExpCategoryById(expCategoryId);
       return successResponse(req, res, result);
     } catch (error) {
       return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
@@ -53,9 +53,9 @@ export const  deleteDonation= async (req, res) => {
   }
 
 
-  export const getallDonation = async(req, res)=> {
+  export const getallexpCategory = async(req, res)=> {
     try {
-        const result = await donationService.getallDonation();
+        const result = await expenseCategoryService.getallexpCategory();
         return successResponse(req, res, result);
       } catch (error) {
         return e
