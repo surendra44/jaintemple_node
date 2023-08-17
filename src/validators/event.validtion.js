@@ -4,12 +4,12 @@ const { objectId} = require('./custom.validation');
 
 export const createEvent = {
     body: Joi.object().keys({
-        EventName: Joi.string().required(),
-        EventDetail: Joi.string().required(),
-        StartDate: Joi.date().iso().required(),
-        EndDate: Joi.date().iso().required(),
-        TempleID: Joi.string().required(),
-        EventCategory: Joi.array().required(),
+        eventName: Joi.string().required(),
+        eventDetail: Joi.string().required(),
+        startDate: Joi.date().iso().required(),
+        endDate: Joi.date().iso().required(),
+        templeID: Joi.custom(objectId),
+        eventCategory: Joi.array().custom(objectId),
     }),
   };
 
@@ -21,12 +21,12 @@ export const createEvent = {
     }),
     body: Joi.object()
       .keys({
-        EventName: Joi.string().required(),
-        EventDetail: Joi.string().required(),
-        StartDate: Joi.date().iso().required(),
-        EndDate: Joi.date().iso().required(),
-        TempleID: Joi.string().required(),
-        EventCategory: Joi.array().required(),
+        eventName: Joi.string().required(),
+        eventDetail: Joi.string().required(),
+        startDate: Joi.date().iso().required(),
+        endDate: Joi.date().iso().required(),
+        templeID:  Joi.custom(objectId),
+        eventCategory: Joi.array(),
       })
   };
 
@@ -41,6 +41,36 @@ export const createEvent = {
 
   
   export const getEventById = {
+    params: Joi.object().keys({
+      id: Joi.required().custom(objectId),
+    }),
+  };
+
+  export const createCategory = {
+    body: Joi.object().keys({
+        name: Joi.string().required(),
+        description: Joi.string().required()
+    }),
+  };
+
+  export const updateCategory = {
+    params: Joi.object().keys({
+      id: Joi.required().custom(objectId),
+    }),
+    body: Joi.object()
+      .keys({
+        name: Joi.string().required(),
+        description: Joi.string().required()
+      })
+  };
+
+  export const deleteCategory = {
+    params: Joi.object().keys({
+      id: Joi.required().custom(objectId),
+    }),
+  };
+
+  export const getCategoryById = {
     params: Joi.object().keys({
       id: Joi.required().custom(objectId),
     }),

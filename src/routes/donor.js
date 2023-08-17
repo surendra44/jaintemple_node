@@ -10,6 +10,7 @@ router.post('/donarRegister',verifyToken.checkSuperAdmin,donorController.registe
 router.get('/getdonor/:id',verifyToken.checkSuperAdmin,validate(donorValidation.getDonorById),donorController.getDonorById);
 router.get('/getalldonor',verifyToken.checkSuperAdmin,donorController.getAllDonors);
 router.put('/donarupdate/:id',verifyToken.checkSuperAdmin ,donorController.updateDonarInfo);
+router.patch('/manage-status/:status/:id',donorController.changeUserStatus);
 
 // 
 // validate(donorValidation.createDonor)

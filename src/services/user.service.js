@@ -1,5 +1,6 @@
 import { Console } from "winston/lib/winston/transports";
 import { ERROR_MESSAGE } from "../helpers/errorMessage";
+const mongoose = require('mongoose')
 const Role = require('../models/role');
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
@@ -15,6 +16,7 @@ export const addUser = async function (body) {
         if (!role) {
             throw new Error(`Role '${roleName}' not found. Admin cannot be created.`);
         }
+        console.log(body);
         const newAdmin = new User({
             name: body.name,
             phonenumber: body.phonenumber,
@@ -22,6 +24,7 @@ export const addUser = async function (body) {
             loginId: body.loginId,
             email: body.email,
             password: body.password,
+            temple: new mongoose.Types.ObjectId(body.temple),
             role: role._id,
           });
         await newAdmin.save();
@@ -59,13 +62,14 @@ export const loginUser = async (loginId, password) => {
       }
       console.log(user._id);
       console.log("============");
-      const accessToken = auth_utilities.createUserToken(user._id);
+      const accessToken = auth_utilities.createUserToken(user);
       return {
         message: 'Login successful',
         user: {
           _id: user._id,
           name: user.name,
-          role:user.role._id
+          role:user.role._id,
+          templeId: user.temple
         },
         accessToken,
       };

@@ -22,7 +22,12 @@ export const registerDonor = async (req, res) => {
 
 export const updateDonarInfo = async (req, res) => {
   const userCreateadBy = req.userId;
+  const templeId = req.templeId;
+  console.log(templeId)
+  console.log("===========")
+  console.log("===========")
   console.log(userCreateadBy)
+  console.log("==============")
   const id = req.params.id
   const { members, ...rest } = req.body;
   const donorInfo = rest;
@@ -65,14 +70,28 @@ export const getDonorById = async (req, res) => {
   const donorId = req.params.id;
   try {
     const donor = await donorService.getDonorByIdWithMembers(donorId);
-    if (!donor) {
-      return res.status(404).json({ error: 'Donor not found' });
-    }
-    res.json({ donor });
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    return successResponse(req, res, result);
+  }catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
   }
 };
+
+
+export const changeUserStatus = async (req, res) => {
+  const id = req.params.id;
+  const status = req.params.status;
+  const parentornot = req.body.isParent;
+  try {
+    const result = await donorService.changeUserStatus(id,status,parentornot);
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+
+
+
 
 
 

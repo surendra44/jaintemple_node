@@ -13,7 +13,7 @@ const router = express.Router({ mergeParams: true });
 router.get("/getTempleById/:id",validate(userValidation.getTempleById),verifyToken.checkSuperAdmin, templeController.getTempleById);    
 router.get("/getTempleall",verifyToken.checkSuperAdmin, templeController.getAllTemples);    
 
-router.post("/addUser",validate(userValidation.createUser),verifyToken.checkSuperAdmin, userController.registerUser);
+router.post("/addUser",validate(userValidation.createUser), userController.registerUser);
 router.post('/login', validate(userValidation.login),userController.login);
 router.post('/templeRegister',validate(userValidation.registerTemple),verifyToken.checkSuperAdmin,templeController.registerTemple);
 
@@ -23,7 +23,7 @@ router.put('/updateTemple/:id',validate(userValidation.updateTemple),verifyToken
 
 router.delete('/deleteTemple/:id',validate(userValidation.deleteTemple),verifyToken.checkSuperAdmin,templeController.deleteTemple);
 
-
+// validate(userValidation.createUser)verifyToken.checkSuperAdmin,
 
 
 

@@ -1,23 +1,23 @@
 const mongoose = require('mongoose');
 
 const eventDetailSchema = new mongoose.Schema({
-  EventName: {
+  eventName: {
     type: String,
   },
-  EventDetail: {
+  eventDetail: {
     type: String,
   },
-  StartDate: {
+  startDate: {
     type: Date,
   },
-  EndDate: {
+  endDate: {
     type: Date,
   },
-  TempleID: {
+  templeID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'TempleDetail',
   },
-  EventCategory: {
+  eventCategory: {
     type: Array,
     // You can specify any additional validation or options here
   },

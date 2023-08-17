@@ -47,6 +47,10 @@ const userSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Role',
     },
+    temple: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'TempleDetail',
+    },
     isActive: {
       type: Boolean,
       default: true,
