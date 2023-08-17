@@ -64,7 +64,8 @@ export const getAllEvent = async(paginationOptions,filter,sortBy)=> {
     const result = await EventDetail.find(filter)
       .sort(sortBy)
       .skip(skip)
-      .limit(size);
+      .limit(size)
+      .populate('eventCategory');
 
     return {
       page,

@@ -5,3 +5,4 @@ module.exports.templeService = require('./temple.service');
 module.exports.eventDetailService = require('./eventDetail.service');
 module.exports.eventDetailService = require('./eventDetail.service');
 module.exports.donationService = require('./donation.service');
+module.exports.expenseCategoryService = require('./expenseCateogy');
