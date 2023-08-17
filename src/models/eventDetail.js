@@ -17,10 +17,10 @@ const eventDetailSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'TempleDetail',
   },
-  eventCategory: {
-    type: Array,
-    // You can specify any additional validation or options here
-  },
+  eventCategory: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EventCategory',
+  }],
 });
 
 const EventDetail = mongoose.model('EventDetail', eventDetailSchema);

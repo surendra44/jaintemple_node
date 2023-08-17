@@ -22,12 +22,6 @@ export const registerDonor = async (req, res) => {
 
 export const updateDonarInfo = async (req, res) => {
   const userCreateadBy = req.userId;
-  const templeId = req.templeId;
-  console.log(templeId)
-  console.log("===========")
-  console.log("===========")
-  console.log(userCreateadBy)
-  console.log("==============")
   const id = req.params.id
   const { members, ...rest } = req.body;
   const donorInfo = rest;
@@ -41,7 +35,8 @@ export const updateDonarInfo = async (req, res) => {
   };
 
 
-export const getAllDonors = async (req, res) => { try {
+export const getAllDonors = async (req, res) => { 
+  try {
   const { page, size, search,sort } = req.query;
 
   const paginationOptions = {
