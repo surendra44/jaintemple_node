@@ -43,7 +43,7 @@ const ObjectID = require('mongodb').ObjectId;
           const event = await Donation.findById(donationId).populate('donarId')
           .populate('eventId')
           .populate('eventCategoryId')
-          .populate('templeId');;
+          .populate('templeId');
             if(!event) throw new Error(ERROR_MESSAGE.NOT_FOUND);
             return event;
         }catch (e) {
