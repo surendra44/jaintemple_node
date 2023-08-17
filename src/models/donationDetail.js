@@ -11,6 +11,11 @@ const donationSchema = new mongoose.Schema({
     ref: 'EventDetail', // Reference to EventDetail model
     required: true,
   },
+  eventCategoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EventCategory', // Reference to EventDetail model
+    required: true,
+  },
   templeId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'TempleDetail', // Reference to TempleDetail model

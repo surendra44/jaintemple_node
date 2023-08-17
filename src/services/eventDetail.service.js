@@ -44,7 +44,7 @@ export const addEventDetail= async (eventData)=> {
 
   export const getEventDetailById = async(eventId)=> {
     try {
-      const event = await EventDetail.findById(eventId);
+      const event = await EventDetail.findById(eventId).populate('eventCategory');
         if(!event) throw new Error(ERROR_MESSAGE.NOT_FOUND);
       return event;
     }catch (e) {
@@ -53,16 +53,32 @@ export const addEventDetail= async (eventData)=> {
     }
 }
 
-export const getAllEvent = async(eventId)=> {
-    try {
-      const event = await EventDetail.find();
-        if(!event) throw new Error(ERROR_MESSAGE.NOT_FOUND);
-      return event;
-    }catch (e) {
-        console.log(e);
-        throw new Error(e);
-    }
-}
+export const getAllEvent = async(paginationOptions,filter,sortBy)=> {
+   try {
+    const { page, size } = paginationOptions;
+
+    const totalDocuments = await EventDetail.countDocuments(filter);
+    const totalPages = Math.ceil(totalDocuments / size);
+    const skip = (page - 1) * size;
+
+    const result = await EventDetail.find(filter)
+      .sort(sortBy)
+      .skip(skip)
+      .limit(size);
+
+    return {
+      page,
+      size,
+      data: result,
+      previousPage: page > 1 ? page - 1 : null,
+      nextPage: page < totalPages ? page + 1 : null,
+      totalDocuments,
+    };
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
 
 export const addEventCategory = async (eventCategory)=> {
   try {

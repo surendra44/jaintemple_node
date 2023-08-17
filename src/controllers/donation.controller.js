@@ -8,6 +8,7 @@ export const addDonation = async (req, res) => {
   const donationDetail = req.body;
   donationDetail.templeId = req.templeId;
   donationDetail.eventId = mongoose.Types.ObjectId(donationDetail.eventId);
+  donationDetail.eventCategoryId = mongoose.Types.ObjectId(donationDetail.eventCategoryId);
   donationDetail.donarId = req.params.id;
   try {
     const result = await donationService.addDonation(donationDetail);
@@ -20,12 +21,10 @@ export const addDonation = async (req, res) => {
 
 export const updateDonation = async (req, res) => {
     try{
-        console.log("===================!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!====")
-    
     const donationId = req.params.id;
     const updatedData = req.body;
-    console.log(donationId,updatedData+"=======================")
     updatedData.eventId = mongoose.Types.ObjectId(updatedData.eventId);
+    updatedData.eventCategoryId = mongoose.Types.ObjectId(updatedData.eventCategoryId);
     const result = await donationService.updateDonation(
         donationId,
       updatedData,
