@@ -70,7 +70,7 @@ export const getDonorById = async (req, res) => {
   const donorId = req.params.id;
   try {
     const donor = await donorService.getDonorByIdWithMembers(donorId);
-    return successResponse(req, res, result);
+    return successResponse(req, res, donor);
   }catch (error) {
     return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
   }
