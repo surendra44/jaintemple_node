@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 import httpStatus from "http-status";
 import { successResponse, errorResponse } from "../helpers";
-const { expenseCategoryService } = require('../services');
+const { expenseService } = require('../services');
 
 
-export const addExpenseCategory = async (req, res) => {
-  const expenseCategoryDetail = req.body;
-   expenseCategoryDetail.templeId = req.templeId;
+export const addexpenses = async (req, res) => {
+  const expenseDetail = req.body;
+   expenseDetail.templeId = req.templeId;
   try {
-    const result = await expenseCategoryService.addExpenseCategory(expenseCategoryDetail);
+    const result = await expenseService.addexpenses(expenseDetail);
     return successResponse(req, res, result);
   } catch (error) {
       return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
@@ -16,12 +16,12 @@ export const addExpenseCategory = async (req, res) => {
 };
 
 
-export const updateExpCategory = async (req, res) => {
+export const updateExpenses = async (req, res) => {
     try{
-    const expCategoryId = req.params.id;
+    const expenseId = req.params.id;
     const updatedData = req.body;
-    const result = await expenseCategoryService.updateExpCategory(
-        expCategoryId,
+    const result = await expenseService.updateExpense(
+        expenseId,
       updatedData,
       { new: true });
     return successResponse(req, res, result);
@@ -32,20 +32,20 @@ export const updateExpCategory = async (req, res) => {
 
 
 
-export const  deleteexpCategory= async (req, res) => {
+export const deleteExpense= async (req, res) => {
     try {
-      const expCategoryId = req.params.id;
-      const result = await expenseCategoryService.deleteexpCategory(expCategoryId);
+      const expenseId = req.params.id;
+      const result = await expenseService.deleteExpense(expenseId);
       return successResponse(req, res, result);
     } catch (error) {
         return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
       }
   }
 
-  export const getExpCategoryById = async(req, res)=> {
+  export const getExpenseById = async(req, res)=> {
     try {
-      const expCategoryId = req.params.id;
-      const result = await expenseCategoryService.getExpCategoryById(expCategoryId);
+      const expenseId = req.params.id;
+      const result = await expenseService.getExpenseById(expenseId);
       return successResponse(req, res, result);
     } catch (error) {
       return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
@@ -53,13 +53,13 @@ export const  deleteexpCategory= async (req, res) => {
   }
 
 
-  export const getallexpCategory = async(req, res)=> {
+  export const getallExpense = async(req, res)=> {
     try {
-        const result = await expenseCategoryService.getallexpCategory();
+        const result = await expenseService.getallExpense();
         return successResponse(req, res, result);
       } catch (error) {
         return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
-      }
+  }
 }
 
 

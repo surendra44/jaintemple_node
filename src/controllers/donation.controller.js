@@ -63,8 +63,8 @@ export const  deleteDonation= async (req, res) => {
         const result = await donationService.getallDonation();
         return successResponse(req, res, result);
       } catch (error) {
-        return e
-  }
+        return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+      }
 }
 
 

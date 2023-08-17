@@ -5,5 +5,6 @@ module.exports.templeController  = require('./temple.controller');
 module.exports.eventDetailController  = require('./eventDetail.controller');
 module.exports.donationController  = require('./donation.controller');
 module.exports.expenseCategory  = require('./expenseCategory.controller');
+module.exports.expenseController  = require('./expense.controller');
 
 

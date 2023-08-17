@@ -50,6 +50,11 @@ export const updateDonor = async (id ,userCreateadBy,donorInfo, membersInfo) => 
         newMembers.push({ ...member, updatedBy: userCreateadBy, createdBy: userCreateadBy,user_detail:id});
       }
     }
+    console.log("+++++++++++++++++++++")
+    console.log(existingMembers);
+    console.log("===========================")
+    console.log(newMembers);
+    
 
     if (existingMembers.length > 0) {
       for(const member of existingMembers ){

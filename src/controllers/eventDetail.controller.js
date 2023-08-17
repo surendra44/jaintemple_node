@@ -31,10 +31,6 @@ const { eventDetailService } = require('../services');
         updatedData,
         { new: true }
       );
-      if (!result) {
-        return errorResponse(req, res, httpStatus.NOT_FOUND, error.message);
-      }
-  
       return successResponse(req, res, result);
     } catch (error) {
         return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
@@ -46,10 +42,6 @@ const { eventDetailService } = require('../services');
     try {
       const eventId = req.params.id;
       const result = await eventDetailService.deleteEventDetail(eventId);
-      if (!result) {
-        return errorResponse(req, res, httpStatus.NOT_FOUND, error.message);
-      }
-  
       return successResponse(req, res, result);
     } catch (error) {
         return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
@@ -60,9 +52,6 @@ const { eventDetailService } = require('../services');
     try {
       const eventId = req.params.id;
       const result = await eventDetailService.getEventDetailById(eventId);
-      if (!result) {
-        return errorResponse(req, res, httpStatus.NOT_FOUND, error.message);
-      }
       return successResponse(req, res, result);
     } catch (error) {
       return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
@@ -91,7 +80,7 @@ const { eventDetailService } = require('../services');
       const result = await eventDetailService.getAllEvent(paginationOptions,filter,sortBy);
       return successResponse(req, res, result);
     } catch (error) {
-      res.status(500).json({ error: 'Internal server error' });
+      return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
     }
   }
 
@@ -100,9 +89,6 @@ const { eventDetailService } = require('../services');
     try {
       const eventCategory = req.body; // Event data sent in the request body
       const result = await eventDetailService.addEventCategory(eventCategory);
-      if (!result) {
-        return errorResponse(req, res, httpStatus.NOT_FOUND, error.message);
-      }
       return successResponse(req, res, result);
     } catch (error) {
         return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
@@ -113,11 +99,7 @@ const { eventDetailService } = require('../services');
     try {
       const categoryId = req.params.id;
       const updatedData = req.body;
-  
       const result = await eventDetailService.updateEventCategory(categoryId,updatedData,{ new: true });
-      if (!result) {
-        return errorResponse(req, res, httpStatus.NOT_FOUND, error.message);
-      }
       return successResponse(req, res, result);
     } catch (error) {
         return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
@@ -129,10 +111,6 @@ const { eventDetailService } = require('../services');
     try {
       const categoryId = req.params.id;
       const result = await eventDetailService.deleteCategory(categoryId);
-      if (!result) {
-        return errorResponse(req, res, httpStatus.NOT_FOUND, error.message);
-      }
-  
       return successResponse(req, res, result);
     } catch (error) {
         return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
@@ -144,9 +122,6 @@ const { eventDetailService } = require('../services');
     try {
       const categoryId = req.params.id;
       const result = await eventDetailService.getCategoryByID(categoryId);
-      if (!result) {
-        return errorResponse(req, res, httpStatus.NOT_FOUND, error.message);
-      }
       return successResponse(req, res, result);
     } catch (error) {
       return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
@@ -157,9 +132,6 @@ const { eventDetailService } = require('../services');
   export const getAllCategory = async(req, res)=>  {
     try {
       const result = await eventDetailService.getAllCategory();
-      if (!result) {
-        return errorResponse(req, res, httpStatus.NOT_FOUND, error.message);
-      }
       return successResponse(req, res, result);
     } catch (error) {
       return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);

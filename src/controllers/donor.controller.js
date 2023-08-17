@@ -57,7 +57,7 @@ export const getAllDonors = async (req, res) => {
   const result = await donorService.getAllDonorsWithMembers(paginationOptions,filter,sortBy);
   return successResponse(req, res, result);
 } catch (error) {
-  res.status(500).json({ error: 'Internal server error' });
+  return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
 }
 };
 
