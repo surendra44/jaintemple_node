@@ -40,7 +40,10 @@ const ObjectID = require('mongodb').ObjectId;
       
       export const getDoationById = async(donationId)=> {
         try {
-          const event = await Donation.findById(donationId);
+          const event = await Donation.findById(donationId).populate('donarId')
+          .populate('eventId')
+          .populate('eventCategoryId')
+          .populate('templeId');;
             if(!event) throw new Error(ERROR_MESSAGE.NOT_FOUND);
             return event;
         }catch (e) {
@@ -52,7 +55,11 @@ const ObjectID = require('mongodb').ObjectId;
 
     export const getallDonation = async()=> {
         try {
-            const event = await Donation.find();
+            const event = await Donation.find()
+            .populate('donarId')
+            .populate('eventId')
+            .populate('eventCategoryId')
+            .populate('templeId');
               if(!event) throw new Error(ERROR_MESSAGE.NOT_FOUND);
             return event;
           }catch (e) {
