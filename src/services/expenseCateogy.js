@@ -16,10 +16,10 @@ const ObjectID = require('mongodb').ObjectId;
       }
 
 
-      export const updateEventDetail= async(eventcategoryId, updatedData)=>{
+      export const updateExpCategory = async(expCategoryId, updatedData)=>{
         try {
-          const updatedEvent = await EventDetail.findByIdAndUpdate(
-            eventcategoryId,
+          const updatedEvent = await ExpensesCategory.findByIdAndUpdate(
+            expCategoryId,
             updatedData,
             { new: true }
           );
@@ -30,3 +30,36 @@ const ObjectID = require('mongodb').ObjectId;
         }
       }
     
+
+      export const deleteexpCategory = async(expCategoryId)=>{
+        try {
+            const DeleteEvent = await ExpensesCategory.findByIdAndDelete(expCategoryId);
+            if(!DeleteEvent) throw new Error(ERROR_MESSAGE.NOT_FOUND);
+            const message = "Deleted Successfully"
+            return message;
+          }catch (e) {
+              console.log(e);
+              throw new Error(e);
+          }
+        }
+
+        export const getExpCategoryById = async(eventId)=> {
+            try {
+              const event = await ExpensesCategory.findById(eventId);
+                if(!event) throw new Error(ERROR_MESSAGE.NOT_FOUND);
+              return event;
+            }catch (e) {
+                console.log(e);
+                throw new Error(e);
+            }
+        }
+
+        export const  getallexpCategory= async()=> {
+             try {
+            return ExpensesCategory.find();
+        }
+        catch (e) {
+            console.log(e);
+            throw new Error(e);
+        }
+    }

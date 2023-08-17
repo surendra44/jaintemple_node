@@ -53,6 +53,7 @@ export const addEventDetail= async (eventData)=> {
     }
 }
 
+
 export const getAllEvent = async(paginationOptions,filter,sortBy)=> {
    try {
     const { page, size } = paginationOptions;
