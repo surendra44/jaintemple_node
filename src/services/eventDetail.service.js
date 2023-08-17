@@ -1,6 +1,7 @@
 import { Console } from "winston/lib/winston/transports";
 import { ERROR_MESSAGE } from "../helpers/errorMessage";
 const EventDetail = require('../models/eventDetail');
+const EventCategory = require('../models/eventCategory');
 
 
 export const addEventDetail= async (eventData)=> {
@@ -14,10 +15,10 @@ export const addEventDetail= async (eventData)=> {
   }
 
 
-  export const updateEventDetail= async(eventId, updatedData)=>{
+  export const updateEventDetail= async(eventcategoryId, updatedData)=>{
     try {
       const updatedEvent = await EventDetail.findByIdAndUpdate(
-        eventId,
+        eventcategoryId,
         updatedData,
         { new: true }
       );
@@ -28,9 +29,9 @@ export const addEventDetail= async (eventData)=> {
     }
   }
 
-  export const deleteEventDetail= async(eventId)=>{
+  export const deleteEventDetail = async(eventId)=>{
     try {
-      const DeleteEvent = await EventDetail.findByIdAndDelete(eventId).select('-_id');;
+      const DeleteEvent = await EventDetail.findByIdAndDelete(eventId);
       if(!DeleteEvent) throw new Error(ERROR_MESSAGE.NOT_FOUND);
       const message = "Deleted Successfully"
       return message;
@@ -61,4 +62,65 @@ export const getAllEvent = async(eventId)=> {
         console.log(e);
         throw new Error(e);
     }
+}
+
+export const addEventCategory = async (eventCategory)=> {
+  try {
+    const newEventCategory = await EventCategory.create(eventCategory);
+    return newEventCategory;
+  }  catch (e) {
+      console.log(e);
+      throw new Error(e);
+  }
+}
+
+
+export const updateEventCategory= async(categoryId, updatedData)=>{
+  try {
+    const updatedCategory = await EventCategory.findByIdAndUpdate(
+      categoryId,
+      updatedData,
+      { new: true }
+    );
+    return updatedCategory;
+  }catch (e) {
+      console.log(e);
+      throw new Error(e);
+  }
+}
+
+
+export const deleteCategory = async(categoryId)=>{
+  try {
+    const DeleteCategory = await EventCategory.findByIdAndDelete(categoryId);;
+    if(!DeleteCategory) throw new Error(ERROR_MESSAGE.NOT_FOUND);
+    const message = "Deleted Successfully"
+    return message;
+  }catch (e) {
+      console.log(e);
+      throw new Error(e);
+  }
+}
+
+export const getCategoryByID  = async(categoryId)=> {
+  try {
+    const event = await EventCategory.findById(categoryId);
+      if(!event) throw new Error(ERROR_MESSAGE.NOT_FOUND);
+    return event;
+  }catch (e) {
+      console.log(e);
+      throw new Error(e);
+  }
+}
+
+
+export const getAllCategory = async()=> {
+  try {
+    const event = await EventCategory.find();
+      if(!event) throw new Error(ERROR_MESSAGE.NOT_FOUND);
+    return event;
+  }catch (e) {
+      console.log(e);
+      throw new Error(e);
+  }
 }

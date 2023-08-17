@@ -61,6 +61,7 @@ if (!user || user.role.name !== 'superadmin') {
   return res.status(403).json({ error: 'Permission denied' });
 }
 req.userId = decoded.userId;
+req.templeId = decoded.templeId;
     next();
   } catch (error) {
     console.error(error);

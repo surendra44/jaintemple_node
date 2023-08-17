@@ -4,7 +4,7 @@ const Family = require('../models/family');
 const ObjectID = require('mongodb').ObjectId;
 
 
-const registerDonor =async (userCreateadBy,members,mainDonarInfo) => {
+export const registerDonor =async (userCreateadBy,members,mainDonarInfo) => {
   try{
   const newMainUser = await Donar.create(mainDonarInfo);
   const createFamilyMember = await createFamilyMembers(newMainUser._id, members, userCreateadBy);
@@ -20,8 +20,7 @@ const registerDonor =async (userCreateadBy,members,mainDonarInfo) => {
 }
 
 }
-
-const createFamilyMembers = async (userId, members,userCreateadBy) => {
+export const createFamilyMembers = async (userId, members,userCreateadBy) => {
        const membersInfo = members.map((member) =>({...member, user_detail: new mongoose.Types.ObjectId(userId),
         createdBy: new mongoose.Types.ObjectId(userCreateadBy), updatedBy: new mongoose.Types.ObjectId(userCreateadBy)}));
       try {
@@ -33,13 +32,11 @@ const createFamilyMembers = async (userId, members,userCreateadBy) => {
   }
 
 
-const updateDonor = async (id ,userCreateadBy,donorInfo, membersInfo) => {
+export const updateDonor = async (id ,userCreateadBy,donorInfo, membersInfo) => {
     try{
-        console.log(donorInfo);
         const filter = { _id: id };
         // delete donorInfo._id
         const update = { $set: donorInfo,updatedBy: userCreateadBy };
-        console.log("sasdff"+id);
     const donar = await Donar.findOneAndUpdate( filter,update); 
     let memberIds = [];
     const existingMembers = []
@@ -81,6 +78,38 @@ const updateDonor = async (id ,userCreateadBy,donorInfo, membersInfo) => {
   };
 
 
+
+  export const changeUserStatus =async (id, status, parentornot) => {
+    try{
+      if(parentornot){
+        const donor = await Donar.findById(id);
+        if(!donor) {
+          throw new Error(`User not found with supplied Id' `);
+        }
+        await Donar.updateOne({_id:id},{ $set: { isActive: status }})
+        const memebers = donor.members
+        for(const member of memebers ){
+          await Family.updateOne({_id:member},{ $set: { isActive: status }})
+        }
+      }
+      else {
+        await Family.updateOne({_id:id},{ $set: { isActive: status }})
+      }      
+   
+      let message
+      if(status == "true"){
+         message ="memeber is activated"
+      }
+      else {
+          message ="memeber is Deactivated"
+      }
+    return {message};;
+    }catch (e) {
+      throw new Error(e);
+  }
+  
+  } 
+
 // const createFamilyMembers = async (userId, members) => {
 //     const membersInfo = members.map((member) =>({...member, user_detail: userId}));
 //     try {
@@ -115,7 +144,7 @@ const updateDonor = async (id ,userCreateadBy,donorInfo, membersInfo) => {
 
 
 
-const getAllDonorsWithMembers = async (paginationOptions, filter, sortBy) => {
+export const getAllDonorsWithMembers = async (paginationOptions, filter, sortBy) => {
   try {
     const { page, size } = paginationOptions;
 
@@ -144,7 +173,7 @@ const getAllDonorsWithMembers = async (paginationOptions, filter, sortBy) => {
 };
 // fghdfhdfhfgd
 
-const getDonorByIdWithMembers = async (donorId) => {
+export const getDonorByIdWithMembers = async (donorId) => {
     try {
       const donor = await Donar.findById(donorId).select('-createdBy -updatedBy -__v  -createdAt -updatedAt ').populate({
         path: 'members',
@@ -156,9 +185,10 @@ const getDonorByIdWithMembers = async (donorId) => {
     }
   };
   
-module.exports = {
-  registerDonor,
-  updateDonor,
-  getAllDonorsWithMembers,
-  getDonorByIdWithMembers
-};
+// module.exports = {
+//   registerDonor,
+//   updateDonor,
+//   getAllDonorsWithMembers,
+//   getDonorByIdWithMembers,
+//   changeUserStatus
+// };
