@@ -9,7 +9,6 @@ const { eventDetailService } = require('../services');
     try {
       const eventData = req.body; 
       eventData.templeID = req.templeId;
-      eventData.eventCategory = eventData.eventCategory.map(categoryId => mongoose.Types.ObjectId(categoryId));
       console.log(eventData);
       const result = await eventDetailService.addEventDetail(eventData);
       if (!result) {
