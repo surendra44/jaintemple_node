@@ -137,3 +137,15 @@ const { eventDetailService } = require('../services');
       return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
     }
   }
+
+
+  export const changeEventStatus = async (req, res) => {
+    const id = req.params.id;
+    const status = req.body.status;
+    try {
+      const result = await eventDetailService.changeEventStatus(id,status);
+      return successResponse(req, res, result);
+    } catch (error) {
+      return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+    }
+  };

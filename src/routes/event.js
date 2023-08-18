@@ -23,6 +23,7 @@ router.put('/updateEventCategory/:id',validate(eventValidation.updateCategory),v
 router.delete('/deleteCategory/:id',validate(eventValidation.deleteCategory),verifyToken.checkSuperAdmin,eventDetailController.deleteCategory);
 router.get('/getCategory/:id', validate(eventValidation.getCategoryById),verifyToken.checkSuperAdmin,eventDetailController.getCategoryByID);
 router.get('/getAllCategory',verifyToken.checkSuperAdmin,eventDetailController.getAllCategory);
+router.patch('/manage-status/:id',verifyToken.checkSuperAdmin,eventDetailController.changeEventStatus);
 
 // router.get('/roleById/:id', roleController.getRoleById);
 // router.get('/allrole', roleController.getAllRoles);

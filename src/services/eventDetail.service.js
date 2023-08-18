@@ -142,3 +142,26 @@ export const getAllCategory = async()=> {
       throw new Error(e);
   }
 }
+
+
+export const changeEventStatus = async (id, status) => {
+  try{
+    let message
+    if(status == "true"){
+      const event = await EventDetail.findById(id);
+      if(!event) {
+        throw new Error(`Event not found with supplied Id' `);
+      }
+      await EventDetail.updateOne({_id:id},{ $set: { isActive: status }})
+      message ="Event is activated"
+    }
+    else {
+      await EventDetail.updateOne({_id:id},{ $set: { isActive: status }})
+      message ="Event is Deactivated"
+    }      
+  return {message};;
+  }catch (e) {
+    throw new Error(e);
+}
+
+} 

@@ -7,8 +7,6 @@ const { donationService } = require('../services');
 export const addDonation = async (req, res) => {
   const donationDetail = req.body;
   donationDetail.templeId = req.templeId;
-  donationDetail.eventId = mongoose.Types.ObjectId(donationDetail.eventId);
-  donationDetail.eventCategoryId = mongoose.Types.ObjectId(donationDetail.eventCategoryId);
   donationDetail.donarId = req.params.id;
   try {
     const result = await donationService.addDonation(donationDetail);

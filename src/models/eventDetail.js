@@ -13,6 +13,10 @@ const eventDetailSchema = new mongoose.Schema({
   endDate: {
     type: Date,
   },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
   templeID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'TempleDetail',
