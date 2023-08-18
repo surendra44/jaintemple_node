@@ -1,155 +1,155 @@
-const mongoose = require('mongoose');
-const Donar = require('../models/donar');
-const Family = require('../models/family');
-const ObjectID = require('mongodb').ObjectId;
+const mongoose = require("mongoose");
+const Donar = require("../models/donar");
+const Family = require("../models/family");
+import { ERROR_MESSAGE } from "../helpers/errorMessage";
 
-
-export const registerDonor =async (userCreateadBy,members,mainDonarInfo) => {
-  try{
-  const newMainUser = await Donar.create(mainDonarInfo);
-  const createFamilyMember = await createFamilyMembers(newMainUser._id, members, userCreateadBy);
-  if (createFamilyMember.success) {
-    const memberIds = createFamilyMember.data.map((member) => new mongoose.Types.ObjectId(member._id));
-    Object.assign(newMainUser, { members: memberIds });
-    newMainUser.save();
-  }
-  return({ success: true,message: createFamilyMember.message, mainDonar: newMainUser, familyMembers: createFamilyMember });
-  }catch (e) {
+export const registerDonor = async (userCreateadBy, members, mainDonarInfo) => {
+  try {
+    const newMainUser = await Donar.create(mainDonarInfo);
+    let createFamilyMember = [];
+    if (members) {
+      if (members.length > 0) {
+        createFamilyMember = await createFamilyMembers(
+          newMainUser._id,
+          members,
+          userCreateadBy
+        );
+        if (createFamilyMember.success) {
+          const memberIds = createFamilyMember.data.map(
+            (member) => new mongoose.Types.ObjectId(member._id)
+          );
+          Object.assign(newMainUser, { members: memberIds });
+          newMainUser.save();
+        }
+      }
+    }
+    const result = { success: true, mainDonar: mainDonarInfo };
+    if (members) {
+      if (members.length > 0) result["familyMembers"] = createFamilyMember;
+    }
+    return result;
+  } catch (e) {
     console.log(e);
     throw new Error(e);
-}
-
-}
-export const createFamilyMembers = async (userId, members,userCreateadBy) => {
-       const membersInfo = members.map((member) =>({...member, user_detail: new mongoose.Types.ObjectId(userId),
-        createdBy: new mongoose.Types.ObjectId(userCreateadBy), updatedBy: new mongoose.Types.ObjectId(userCreateadBy)}));
-      try {
-          const result = await Family.insertMany(membersInfo);
-          return ({ success: true, data: result, message: '' });
-      } catch (error) {
-          return ({ success: false, message: 'There was a problem adding members please check the info again.' });
-      }
   }
+};
+export const createFamilyMembers = async (userId, members, userCreateadBy) => {
+  const membersInfo = members.map((member) => ({
+    ...member,
+    user_detail: new mongoose.Types.ObjectId(userId),
+    createdBy: new mongoose.Types.ObjectId(userCreateadBy),
+    updatedBy: new mongoose.Types.ObjectId(userCreateadBy),
+  }));
+  try {
+    const result = await Family.insertMany(membersInfo);
+    return { success: true, data: result, message: "" };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        "There was a problem adding members please check the info again.",
+    };
+  }
+};
 
-
-export const updateDonor = async (id ,userCreateadBy,donorInfo, membersInfo) => {
-    try{
-        const filter = { _id: id };
-        // delete donorInfo._id
-        const update = { $set: donorInfo,updatedBy: userCreateadBy };
-    const donar = await Donar.findOneAndUpdate( filter,update); 
-    let memberIds = [];
-    const existingMembers = []
-    const newMembers = [];
-
-    for (const member of membersInfo) {
-      if (member._id) {
-        existingMembers.push({ ...member, updatedBy: userCreateadBy });
-        memberIds.push(member._id);
-      } else {
-        newMembers.push({ ...member, updatedBy: userCreateadBy, createdBy: userCreateadBy,user_detail:id});
-      }
+export const updateDonor = async (
+  id,
+  userCreateadBy,
+  donorInfo,
+  membersInfo
+) => {
+  try {
+    const donar = await Donar.findOne({ _id: id });
+    if (!donar) {
+      throw new Error(ERROR_MESSAGE.NOT_FOUND);
     }
-    console.log("+++++++++++++++++++++")
-    console.log(existingMembers);
-    console.log("===========================")
-    console.log(newMembers);
-    
-
-    if (existingMembers.length > 0) {
-      for(const member of existingMembers ){
-        const filter = { _id: { $in: memberIds }};
-        delete member._id;
-        const update = { $set: member };
-        await Family.updateOne(filter,update)
-      }
-    }
-    
-    if(newMembers.length >0){
-      const newfamilymember = await Family.insertMany(newMembers);
-      newfamilymember.map((member) => memberIds.push(member._id));
-    }
-    
-    
-    Object.assign(donar,{members:memberIds})
+    Object.assign(donar, { ...donorInfo, updatedBy: userCreateadBy });
     await donar.save();
+    let memberIds = [];
+    if (membersInfo) {
+      let existingMembers = [];
+      let newMembers = [];
 
-       return{ success: true, message: 'Donor updated successfully.', mainDonar: donar, familyMembers: memberIds };
-      
-    }  catch (e) {
-      console.log(e);
-      throw new Error(e);
-  }
-  };
-
-
-
-  export const changeUserStatus =async (id, status, parentornot) => {
-    try{
-      if(parentornot){
-        const donor = await Donar.findById(id);
-        if(!donor) {
-          throw new Error(`User not found with supplied Id' `);
+      if (membersInfo.length > 0) {
+        for (const member of membersInfo) {
+          if (member._id) {
+            existingMembers.push({ ...member, updatedBy: userCreateadBy });
+            memberIds.push(member._id);
+          } else {
+            newMembers.push({
+              ...member,
+              updatedBy: userCreateadBy,
+              createdBy: userCreateadBy,
+              user_detail: id,
+            });
+          }
         }
-        await Donar.updateOne({_id:id},{ $set: { isActive: status }})
-        const memebers = donor.members
-        for(const member of memebers ){
-          await Family.updateOne({_id:member},{ $set: { isActive: status }})
+
+        if (existingMembers.length > 0) {
+          for (const member of existingMembers) {
+            const filter = { _id: member._id };
+            delete member._id;
+            const update = { $set: member };
+            await Family.updateOne(filter, update);
+          }
         }
+
+        if (newMembers.length > 0) {
+          const newfamilymember = await Family.insertMany(newMembers);
+          newfamilymember.map((member) => memberIds.push(member._id));
+        }
+
+        Object.assign(donar, { members: memberIds });
+        await donar.save();
       }
-      else {
-        await Family.updateOne({_id:id},{ $set: { isActive: status }})
-      }      
-   
-      let message
-      if(status == "true"){
-         message ="memeber is activated"
-      }
-      else {
-          message ="memeber is Deactivated"
-      }
-    return {message};;
-    }catch (e) {
-      throw new Error(e);
+    }
+
+    const result = { success: true, mainDonar: donar };
+
+    if (membersInfo) {
+      if (membersInfo.length > 0) result["familyMembers"] = memberIds;
+    }
+
+    return result;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
   }
-  
-  } 
+};
 
-// const createFamilyMembers = async (userId, members) => {
-//     const membersInfo = members.map((member) =>({...member, user_detail: userId}));
-//     try {
-//         const result = await Family.insertMany(membersInfo);
-//         return ({ success: true, data: result, message: '' });
-//     } catch (error) {
-//         retunr ({ success: false, message: 'There was a problem adding members please check the info again.' });
-//     }
-// }
+export const changeUserStatus = async (id, status, parentornot) => {
+  try {
+    if (parentornot) {
+      const donor = await Donar.findById(id);
+      if (!donor) {
+        throw new Error(`User not found with supplied Id' `);
+      }
+      await Donar.updateOne({ _id: id }, { $set: { isActive: status } });
+      const memebers = donor.members;
+      for (const member of memebers) {
+        await Family.updateOne({ _id: member }, { $set: { isActive: status } });
+      }
+    } else {
+      await Family.updateOne({ _id: id }, { $set: { isActive: status } });
+    }
 
+    let message;
+    if (status == "true") {
+      message = "memeber is activated";
+    } else {
+      message = "memeber is Deactivated";
+    }
+    return { message };
+  } catch (e) {
+    throw new Error(e);
+  }
+};
 
-// const updateDonorAndMembers = async (donorId, donorData, memberData) => {
-//     try {
-//       const updatedDonor = await Donar.findByIdAndUpdate(
-//         donorId,
-//         { $set: { ...donorData } },
-//         { new: true }
-//       );
-  
-//       if (memberData.length > 0) {
-//         await Family.deleteMany({ user_detail: donorId });
-  
-//         const membersInfo = memberData.map((member) => ({ ...member, user_detail: donorId }));
-//         await Family.insertMany(membersInfo);
-//       }
-  
-//       return { success: true, message: 'Donor and family members updated successfully', donor: updatedDonor };
-//     } catch (error) {
-//       return { success: false, message: 'Error updating donor and family members', error: error.message };
-//     }
-//   };
-
-
-
-export const getAllDonorsWithMembers = async (paginationOptions, filter, sortBy) => {
+export const getAllDonorsWithMembers = async (
+  paginationOptions,
+  filter,
+  sortBy
+) => {
   try {
     const { page, size } = paginationOptions;
 
@@ -161,7 +161,7 @@ export const getAllDonorsWithMembers = async (paginationOptions, filter, sortBy)
       .sort(sortBy)
       .skip(skip)
       .limit(size)
-      .populate('members');
+      .populate("members");
 
     return {
       page,
@@ -179,21 +179,17 @@ export const getAllDonorsWithMembers = async (paginationOptions, filter, sortBy)
 // fghdfhdfhfgd
 
 export const getDonorByIdWithMembers = async (donorId) => {
-    try {
-      const donor = await Donar.findById(donorId).select('-createdBy -updatedBy -__v  -createdAt -updatedAt ').populate({
-        path: 'members',
-        select: '-createdBy -updatedBy  -user_detail -__v -createdAt   -updatedAt -address    ',
+  try {
+    const donor = await Donar.findById(donorId)
+      .select("-createdBy -updatedBy -__v  -createdAt -updatedAt ")
+      .populate({
+        path: "members",
+        select:
+          "-createdBy -updatedBy  -user_detail -__v -createdAt   -updatedAt -address    ",
       });
-      return donor;
-    } catch (error) {
-      throw new Error('Unable to fetch donor by ID');
-    }
-  };
-  
-// module.exports = {
-//   registerDonor,
-//   updateDonor,
-//   getAllDonorsWithMembers,
-//   getDonorByIdWithMembers,
-//   changeUserStatus
-// };
+    if (!donor) throw new Error(ERROR_MESSAGE.DONAR.GetID);
+    return donor;
+  } catch (error) {
+    throw new Error("Unable to fetch donor by ID");
+  }
+};

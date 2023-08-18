@@ -11,22 +11,19 @@ import express from "express";
 const router = express.Router({ mergeParams: true });
 
 
-router.post('/addevent',verifyToken.checkSuperAdmin,eventDetailController.addEventDetail);
-router.put('/updateevent/:id',validate(eventValidation.updateEvent), verifyToken.checkSuperAdmin,eventDetailController.updateEventDetail);
-router.delete('/deleteevent/:id',validate(eventValidation.deleteEvent), verifyToken.checkSuperAdmin,eventDetailController.deleteEventDetail);
-router.get('/getevent/:id',validate(eventValidation.getEventById),verifyToken.checkSuperAdmin, eventDetailController.getEventById);
+router.post('/addevent',verifyToken.checkSuperAdmin,validate(eventValidation.createEvent),eventDetailController.addEventDetail);
+router.put('/updateevent/:id', verifyToken.checkSuperAdmin,validate(eventValidation.updateEvent),eventDetailController.updateEventDetail);
+router.delete('/deleteevent/:id', verifyToken.checkSuperAdmin,validate(eventValidation.deleteEvent),eventDetailController.deleteEventDetail);
+router.get('/getevent/:id', verifyToken.checkSuperAdmin,validate(eventValidation.getEventById),eventDetailController.getEventById);
 router.get('/getallevent',verifyToken.checkSuperAdmin ,eventDetailController.getAllEvent);
 
 
-router.post('/addeventCategory',validate(eventValidation.createCategory),verifyToken.checkSuperAdmin,eventDetailController.addEventCategory);
-router.put('/updateEventCategory/:id',validate(eventValidation.updateCategory),verifyToken.checkSuperAdmin,eventDetailController.updateEventCategory);
-router.delete('/deleteCategory/:id',validate(eventValidation.deleteCategory),verifyToken.checkSuperAdmin,eventDetailController.deleteCategory);
-router.get('/getCategory/:id', validate(eventValidation.getCategoryById),verifyToken.checkSuperAdmin,eventDetailController.getCategoryByID);
+router.post('/addeventCategory', verifyToken.checkSuperAdmin,validate(eventValidation.createCategory),eventDetailController.addEventCategory);
+router.put('/updateEventCategory/:id', verifyToken.checkSuperAdmin,validate(eventValidation.updateCategory),eventDetailController.updateEventCategory);
+router.delete('/deleteCategory/:id', verifyToken.checkSuperAdmin,validate(eventValidation.deleteCategory),eventDetailController.deleteCategory);
+router.get('/getCategory/:id',  verifyToken.checkSuperAdmin,validate(eventValidation.getCategoryById),eventDetailController.getCategoryByID);
+router.patch('/manage-status/:id',verifyToken.checkSuperAdmin,validate(eventValidation.softdelteEventById),eventDetailController.changeEventStatus);
 router.get('/getAllCategory',verifyToken.checkSuperAdmin,eventDetailController.getAllCategory);
-router.patch('/manage-status/:id',verifyToken.checkSuperAdmin,eventDetailController.changeEventStatus);
-
-// router.get('/roleById/:id', roleController.getRoleById);
-// router.get('/allrole', roleController.getAllRoles);
 
 
 

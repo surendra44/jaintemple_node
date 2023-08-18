@@ -4,5 +4,13 @@ export const ERROR_MESSAGE = {
   },
   
   NOT_FOUND: "Data not found",
-  DeleteID_NotFound:"The Resource you are trying delete is not Found"
+  DONATION:{
+    Delete:"The Donation ID you are trying delete is not Found",
+    GetID:"The Donation ID you are trying Find is not Found"
+  },
+  DONAR:{
+    Delete:"The Donar ID you are trying delete is not Found",
+    GetID:"The Donar ID you are trying Find is not Found"
+  },
+
 };

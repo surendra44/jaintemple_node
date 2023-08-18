@@ -8,8 +8,7 @@ export const createEvent = {
         eventDetail: Joi.string().required(),
         startDate: Joi.date().iso().required(),
         endDate: Joi.date().iso().required(),
-        templeID: Joi.custom(objectId),
-        eventCategory: Joi.array().custom(objectId),
+        eventCategory: Joi.array(),
     }),
   };
 
@@ -75,3 +74,14 @@ export const createEvent = {
       id: Joi.required().custom(objectId),
     }),
   };
+
+
+  export const softdelteEventById = {
+    params: Joi.object().keys({
+      id: Joi.required().custom(objectId),
+    }), body: Joi.object()
+    .keys({
+      status: Joi.string().required(),
+    })
+  };
+  
