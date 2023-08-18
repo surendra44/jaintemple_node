@@ -4,9 +4,17 @@ const expensesDetailSchema = new mongoose.Schema({
   expensesName: {
     type: String,
   },
-  expensesCategoryID: {
+  expensesCategoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "ExpensesCategory",
+  },
+  eventExpensesId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "EventDetail",
+  },
+  eventCategoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "EventCategory",
   },
   expensesAccNumberFrom: {
     type: String,
