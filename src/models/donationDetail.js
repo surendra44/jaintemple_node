@@ -3,18 +3,17 @@ const mongoose = require('mongoose');
 const donationSchema = new mongoose.Schema({
   donarId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Donar', // Reference to Doner model
-    required: true,
+    ref: 'Donar',
+    required: true, // Reference to Doner model
   },
   eventId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'EventDetail', // Reference to EventDetail model
-    required: true,
   },
   eventCategoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'EventCategory', // Reference to EventDetail model
-    required: true,
+
   },
   templeId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -31,7 +30,7 @@ const donationSchema = new mongoose.Schema({
   },
   donationStatus: {
     type: String,
-    required: true,
+   
   },
   donationDetail: {
     type: String,
