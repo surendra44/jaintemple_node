@@ -8,7 +8,7 @@ export const createEvent = {
         eventDetail: Joi.string().required(),
         startDate: Joi.date().iso().required(),
         endDate: Joi.date().iso().required(),
-        eventCategory: Joi.array().custom(objectId).allow(null),
+        eventCategory: Joi.array(),
     }),
   };
 

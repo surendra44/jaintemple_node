@@ -16,7 +16,7 @@ export const updateExpenseCategory = {
   body: Joi.object().keys({
     expensesCategory: Joi.string().required(),
     expensesCategoryDetail:  Joi.string(),
-    templeID: Joi.custom(objectId).allow(null),
+    templeId: Joi.custom(objectId).allow(null),
   }),
 };
 

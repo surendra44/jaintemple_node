@@ -11,7 +11,7 @@ import express from "express";
 const router = express.Router({ mergeParams: true });
 
 
-router.post('/addevent',verifyToken.checkSuperAdmin,validate(eventValidation.updateEvent),eventDetailController.addEventDetail);
+router.post('/addevent',verifyToken.checkSuperAdmin,validate(eventValidation.createEvent),eventDetailController.addEventDetail);
 router.put('/updateevent/:id', verifyToken.checkSuperAdmin,validate(eventValidation.updateEvent),eventDetailController.updateEventDetail);
 router.delete('/deleteevent/:id', verifyToken.checkSuperAdmin,validate(eventValidation.deleteEvent),eventDetailController.deleteEventDetail);
 router.get('/getevent/:id', verifyToken.checkSuperAdmin,validate(eventValidation.getEventById),eventDetailController.getEventById);
