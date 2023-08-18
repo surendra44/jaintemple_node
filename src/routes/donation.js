@@ -7,10 +7,10 @@ const donationValidation = require('../validators/donation.validation');
 const router = express.Router({ mergeParams: true });
 
 router.post('/addDonation/:id',verifyToken.checkSuperAdmin,validate(donationValidation.createDonation),donationController.addDonation);
-router.put('/updateDonation/:id',validate(donationValidation.updateDonation),donationController.updateDonation);
-router.delete('/deleteDonation/:id',validate(donationValidation.delteDonationById),donationController.deleteDonation);
-router.get('/getDonation/:id',validate(donationValidation.getDonationById),donationController.getDoationById);
-router.get('/getallDonation',donationController.getallDonation);
+router.put('/updateDonation/:id',verifyToken.checkSuperAdmin,validate(donationValidation.updateDonation),donationController.updateDonation);
+router.delete('/deleteDonation/:id',verifyToken.checkSuperAdmin,validate(donationValidation.delteDonationById),donationController.deleteDonation);
+router.get('/getDonation/:id',verifyToken.checkSuperAdmin,validate(donationValidation.getDonationById),donationController.getDoationById);
+router.get('/getallDonation',verifyToken.checkSuperAdmin,donationController.getallDonation);
 
 
 

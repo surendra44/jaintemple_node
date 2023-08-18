@@ -8,7 +8,6 @@ const { donorService } = require('../services');
 
 export const registerDonor = async (req, res) => {
   const userCreateadBy = req.userId;
-  console.log(userCreateadBy)
   const{ members,...rest } = req.body;
   try {
     const mainDonarInfo = { ...rest, createdBy: new mongoose.Types.ObjectId(userCreateadBy), updatedBy: new mongoose.Types.ObjectId(userCreateadBy) };

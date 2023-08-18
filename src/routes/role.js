@@ -11,10 +11,10 @@ import express from "express";
 const router = express.Router({ mergeParams: true });
 
 
-router.post('/createrole', validate(roleValidation.createRole),verifyToken.checkSuperAdmin,roleController.createRole);
-router.get('/roleById/:id', validate(roleValidation.getRoleById),verifyToken.checkSuperAdmin,roleController.getRoleById);
-router.get('/allrole', roleController.getAllRoles);
-router.delete('/delterole/:id',validate(roleValidation.getRoleById),verifyToken.checkSuperAdmin, roleController.deleteRole);
+router.post('/createrole', verifyToken.checkSuperAdmin,validate(roleValidation.createRole),roleController.createRole);
+router.get('/roleById/:id',verifyToken.checkSuperAdmin, validate(roleValidation.getRoleById),roleController.getRoleById);
+router.get('/allrole', verifyToken.checkSuperAdmin,roleController.getAllRoles);
+router.delete('/delterole/:id',verifyToken.checkSuperAdmin,validate(roleValidation.getRoleById),roleController.deleteRole);
 
 
 
