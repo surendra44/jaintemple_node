@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Donation = require('../models/donationDetail');
+import { ERROR_MESSAGE } from "../helpers/errorMessage";
 const ObjectID = require('mongodb').ObjectId;
 
 
@@ -29,7 +30,7 @@ const ObjectID = require('mongodb').ObjectId;
       export const deleteDonation = async(donationId)=>{
         try {
           const DeleteEvent = await Donation.findByIdAndDelete(donationId);
-          if(!DeleteEvent) throw new Error(ERROR_MESSAGE.NOT_FOUND);
+          if(!DeleteEvent) throw new Error(ERROR_MESSAGE.DeleteID_NotFound);
           const message = "Deleted Successfully"
           return message;
         }catch (e) {

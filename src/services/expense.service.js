@@ -44,7 +44,9 @@ export const addexpenses = async (eventData)=> {
 
         export const  getExpenseById = async(expenseId)=>{
             try {
-                const event = await expenseDetail.findById(expenseId);
+                const event = await expenseDetail.findById(expenseId).populate('expensesCategoryId')
+                .populate('eventExpensesId')
+                .populate('eventCategoryId');
                   if(!event) throw new Error(ERROR_MESSAGE.NOT_FOUND);
                 return event;
               }catch (e) {
@@ -56,7 +58,9 @@ export const addexpenses = async (eventData)=> {
 
           export const getallExpense = async()=>{
             try {
-                return expenseDetail.find();
+                return expenseDetail.find().populate('expensesCategoryId')
+                .populate('eventExpensesId')
+                .populate('eventCategoryId');;
             }catch (e) {
                   console.log(e);
                   throw new Error(e);
