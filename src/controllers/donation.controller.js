@@ -58,11 +58,28 @@ export const  deleteDonation= async (req, res) => {
 
   export const getallDonation = async(req, res)=> {
     try {
-        const result = await donationService.getallDonation();
-        return successResponse(req, res, result);
-      } catch (error) {
-        return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
-      }
+      const { page, size, search,sort } = req.query;
+    
+      const paginationOptions = {
+        page: parseInt(page) || 1,
+        size: parseInt(size) || 10,
+      };
+    
+      const filter = {
+        $or: [
+          { firstName: { $regex: search || "", $options: "i" } },
+          { "phoneNumbers.Phonenumber1": { $regex: search || "", $options: "i" } },
+          { "phoneNumbers.Phonenumber2": { $regex: search || "", $options: "i" } },
+        ],
+      };
+    
+      const sortingOptions = sort ? sort.split(",") : ["_id", "asc"];
+      const sortBy = { [sortingOptions[0]]: sortingOptions[1] };
+      const result = await donationService.getallDonation(paginationOptions,filter,sortBy);
+      return successResponse(req, res, result);
+    } catch (error) {
+      return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+    }
 }
 
 

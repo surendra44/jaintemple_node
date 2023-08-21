@@ -56,13 +56,33 @@ export const addexpenses = async (eventData)=> {
           }
 
 
-          export const getallExpense = async()=>{
+          export const getallExpense = async(paginationOptions,filter,sortBy)=>{
+
             try {
-                return expenseDetail.find().populate('expensesCategoryId')
+              const { page, size } = paginationOptions;
+          
+              const totalDocuments = await expenseDetail.countDocuments(filter);
+              const totalPages = Math.ceil(totalDocuments / size);
+              const skip = (page - 1) * size;
+          
+              const result = await expenseDetail.find(filter)
+                .sort(sortBy)
+                .skip(skip)
+                .limit(size)
                 .populate('eventExpensesId')
-                .populate('eventCategoryId');;
-            }catch (e) {
-                  console.log(e);
-                  throw new Error(e);
-              }
+                .populate('eventCategoryId');
+
+              return {
+                page,
+                size,
+                data: result,
+                previousPage: page > 1 ? page - 1 : null,
+                nextPage: page < totalPages ? page + 1 : null,
+                totalDocuments,
+              };
+            } catch (e) {
+              console.log(e);
+              throw new Error(e);
+            }
+
           }
