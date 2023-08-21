@@ -53,15 +53,29 @@ export const getDoationById = async (donationId) => {
   }
 };
 
-export const getallDonation = async () => {
+export const getallDonation = async (paginationOptions,filter,sortBy) => {
   try {
-    const event = await Donation.find()
-      .populate("donarId")
+    const { page, size } = paginationOptions;
+
+    const totalDocuments = await Donation.countDocuments(filter);
+    const totalPages = Math.ceil(totalDocuments / size);
+    const skip = (page - 1) * size;
+
+    const result = await Donation.find(filter)
+      .sort(sortBy)
+      .skip(skip)
+      .limit(size)
       .populate("eventId")
-      .populate("eventCategoryId")
-      .populate("templeId");
-    if (!event) throw new Error(ERROR_MESSAGE.NOT_FOUND);
-    return event;
+      .populate("eventCategoryId");
+
+    return {
+      page,
+      size,
+      data: result,
+      previousPage: page > 1 ? page - 1 : null,
+      nextPage: page < totalPages ? page + 1 : null,
+      totalDocuments,
+    };
   } catch (e) {
     console.log(e);
     throw new Error(e);
