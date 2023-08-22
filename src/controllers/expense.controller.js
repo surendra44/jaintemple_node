@@ -64,9 +64,9 @@ export const deleteExpense= async (req, res) => {
     
       const filter = {
         $or: [
-          { firstName: { $regex: search || "", $options: "i" } },
-          { "phoneNumbers.Phonenumber1": { $regex: search || "", $options: "i" } },
-          { "phoneNumbers.Phonenumber2": { $regex: search || "", $options: "i" } },
+          { expensesName: { $regex: search || "", $options: "i" } },
+          { expensesStatus: { $regex: search || "", $options: "i" } },
+          { expensesPayemntType: { $regex: search || "", $options: "i" } },
         ],
       };
     
