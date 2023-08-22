@@ -24,7 +24,7 @@ const donationSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  donationAmount: {
+  donationAmount: { 
     type: Number,
     required: true,
   },

@@ -67,9 +67,7 @@ export const  deleteDonation= async (req, res) => {
     
       const filter = {
         $or: [
-          { firstName: { $regex: search || "", $options: "i" } },
-          { "phoneNumbers.Phonenumber1": { $regex: search || "", $options: "i" } },
-          { "phoneNumbers.Phonenumber2": { $regex: search || "", $options: "i" } },
+          { donationMode: { $regex: search || "", $options: "i" } }
         ],
       };
     
