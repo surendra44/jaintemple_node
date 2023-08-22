@@ -84,7 +84,6 @@ export const deleteExpense= async (req, res) => {
 export const getDayExpense = async (req, res) => {
   try {
     const result = await expenseService.getDayExpense();
-    if(result)
     return successResponse(req, res, result);
   } catch (error) {
     return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
