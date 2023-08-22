@@ -86,3 +86,21 @@ export const addexpenses = async (eventData)=> {
             }
 
           }
+
+
+
+          export const getDayExpense = async () => {
+            try {
+              const todayDate = new  Date().toISOString();
+              const [year, month, day] = todayDate.split('T')[0].split("-");
+              const fromDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
+              const toDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999));
+              const data = await expenseDetail.find({ expensesDate: { $gte: fromDate, $lte: toDate } });
+              const sum = data.reduce((total,expense)=>total+expense.expensesAmount, 0)
+              console.log(sum);
+              return sum;
+            } catch (e) {
+              console.log(e);
+              throw new Error(e);
+            }
+          };

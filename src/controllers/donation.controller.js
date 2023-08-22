@@ -35,6 +35,9 @@ export const updateDonation = async (req, res) => {
 
 
 
+
+
+
 export const  deleteDonation= async (req, res) => {
     try {
       const donationId = req.params.id;
@@ -79,6 +82,28 @@ export const  deleteDonation= async (req, res) => {
       return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
     }
 }
+
+export const getDayDonation = async (req, res) => {
+  try {
+    const result = await donationService.getDayDonation();
+    if(result)
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+
+export const totalBalance = async (req, res) => {
+  try {
+    const result = await donationService.totalBalance();
+    if(result)
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
 
 
 // sdfa

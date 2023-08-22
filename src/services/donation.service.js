@@ -1,5 +1,7 @@
 const Donation = require("../models/donationDetail");
+const expenseDetail = require('../models/expenseDetail');
 import { ERROR_MESSAGE } from "../helpers/errorMessage";
+
 
 
 export const addDonation = async (donationDetail) => {
@@ -81,3 +83,44 @@ export const getallDonation = async (paginationOptions,filter,sortBy) => {
     throw new Error(e);
   }
 };
+
+
+export const getDayDonation = async () => {
+  try {
+    const todayDate = new  Date().toISOString();
+    const [year, month, day] = todayDate.split('T')[0].split("-");
+    const fromDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
+    const toDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999));
+    const data = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate } });
+    const sum = data.reduce((total,donation)=>total+donation.donationAmount, 0)
+    console.log(sum);
+    return sum;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
+export const totalBalance = async () => {
+  try {
+    const todayDate = new  Date().toISOString();
+    const [year, month, day] = todayDate.split('T')[0].split("-");
+    const fromDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
+    const toDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999));
+    const donation = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate } });
+    const expenses = await expenseDetail.find({ expensesDate: { $gte: fromDate, $lte: toDate } });
+    const donationSum = donation.reduce((total,donation)=>total+donation.donationAmount, 0)
+    const expensesSum = expenses.reduce((total,donation)=>total+donation.expensesAmount, 0)
+    console.log("expensesSum"+expensesSum)
+    console.log("donationSum"+donationSum)
+    const totalBalance = donationSum-expensesSum
+    console.log(totalBalance);
+    return totalBalance;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
+
+
