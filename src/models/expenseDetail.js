@@ -19,6 +19,9 @@ const expensesDetailSchema = new mongoose.Schema({
   expensesAccNumberFrom: {
     type: String,
   },
+  expensesPayemntType: {
+    type: String,
+  },
   expensesAccNumberTo: {
     type: String,
   },
