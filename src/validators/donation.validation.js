@@ -14,7 +14,7 @@ export const createDonation = {
     donationDetail: Joi.string(),
     donationAccNumber: Joi.string(),
     donateToAccNumber: Joi.string(),
-    donationDate: Joi.date(),
+    donationDate: Joi.date().iso(),
   }),
 };
 
@@ -33,7 +33,7 @@ export const updateDonation = {
     donationDetail: Joi.string(),
     donationAccNumber: Joi.string(),
     donateToAccNumber: Joi.string(),
-    donationDate: Joi.date(),
+    donationDate: Joi.date().iso(),
   }),
 };
 

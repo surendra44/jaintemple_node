@@ -193,3 +193,19 @@ export const getDonorByIdWithMembers = async (donorId) => {
     throw new Error("Unable to fetch donor by ID");
   }
 };
+
+export const getDayDonor = async () => {
+  try {
+    const todayDate = new  Date().toISOString();
+    const [year, month, day] = todayDate.split('T')[0].split("-");
+    const fromDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
+    const toDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999));
+    const data = await Donar.find({ createdAt: { $gte: fromDate, $lte: toDate } });
+   const sumofDonar = data.length
+    console.log(data);
+    return sumofDonar;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};

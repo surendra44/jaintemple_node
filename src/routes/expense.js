@@ -16,6 +16,7 @@ router.put('/updateExpenses/:id', verifyToken.checkSuperAdmin,validate(expenseVa
 router.delete('/deleteExpense/:id', verifyToken.checkSuperAdmin,validate(expenseValidation.deleteExpense),expenseController.deleteExpense);
 router.get('/getExpense/:id',verifyToken.checkSuperAdmin,validate(expenseValidation.getExpenseById), expenseController.getExpenseById);
 router.get('/getallExpense',verifyToken.checkSuperAdmin,expenseController.getallExpense);
+router.get('/getDayExpense',verifyToken.checkSuperAdmin,expenseController.getDayExpense);
 
 
 
