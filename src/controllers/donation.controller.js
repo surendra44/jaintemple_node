@@ -93,6 +93,25 @@ export const getDayDonation = async (req, res) => {
 };
 
 
+export const totaldayBalance = async (req, res) => {
+  try {
+    const result = await donationService.totaldayBalance();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+export const getTotalDonation = async (req, res) => {
+  try {
+    const result = await donationService.getTotalDonation();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+
 export const totalBalance = async (req, res) => {
   try {
     const result = await donationService.totalBalance();
@@ -103,6 +122,14 @@ export const totalBalance = async (req, res) => {
 };
 
 
+export const totalCashBalance = async (req, res) => {
+  try {
+    const result = await donationService.totalCashBalance();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
 
 // sdfa
 

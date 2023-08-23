@@ -209,3 +209,16 @@ export const getDayDonor = async () => {
     throw new Error(e);
   }
 };
+
+
+
+export const getTotalDonarCount = async () => {
+  try { 
+    const result = await Donar.find()
+    const sum = result.length
+    return sum;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};

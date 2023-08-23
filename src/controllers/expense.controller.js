@@ -91,5 +91,14 @@ export const getDayExpense = async (req, res) => {
 };
 
 
+export const getTotalExpense = async (req, res) => {
+  try {
+    const result = await expenseService.getTotalExpense();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
 
 

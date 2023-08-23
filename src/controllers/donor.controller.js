@@ -96,3 +96,13 @@ export const getDayDonor = async (req, res) => {
     return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
   }
 };
+
+
+export const getTotalDonarCount = async (req, res) => {
+  try {
+    const result = await donorService.getTotalDonarCount();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
