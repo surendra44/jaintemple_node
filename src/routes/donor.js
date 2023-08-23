@@ -14,6 +14,7 @@ router.put('/donarupdate/:id',verifyToken.checkSuperAdmin,validate(donorValidati
 router.patch('/manage-status/:status/:id',verifyToken.checkSuperAdmin,validate(donorValidation.softdelteDonorById),donorController.changeUserStatus);
 router.get('/getalldonor',verifyToken.checkSuperAdmin,donorController.getAllDonors);
 router.get('/getDayDonor',verifyToken.checkSuperAdmin,donorController.getDayDonor);
+router.get('/getDonorCount',verifyToken.checkSuperAdmin,donorController.getTotalDonarCount);
 // 
 // validate(donorValidation.createDonor)
 export default router;

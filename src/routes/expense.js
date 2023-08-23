@@ -17,6 +17,7 @@ router.delete('/deleteExpense/:id', verifyToken.checkSuperAdmin,validate(expense
 router.get('/getExpense/:id',verifyToken.checkSuperAdmin,validate(expenseValidation.getExpenseById), expenseController.getExpenseById);
 router.get('/getallExpense',verifyToken.checkSuperAdmin,expenseController.getallExpense);
 router.get('/getDayExpense',verifyToken.checkSuperAdmin,expenseController.getDayExpense);
+router.get('/getTotalExpense',verifyToken.checkSuperAdmin,expenseController.getTotalExpense);
 
 
 

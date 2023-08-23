@@ -1,5 +1,5 @@
 const Donation = require("../models/donationDetail");
-const expenseDetail = require('../models/expenseDetail');
+const ExpenseDetail = require('../models/expenseDetail');
 import { ERROR_MESSAGE } from "../helpers/errorMessage";
 
 
@@ -101,14 +101,14 @@ export const getDayDonation = async () => {
   }
 };
 
-export const totalBalance = async () => {
+export const totaldayBalance = async () => {
   try {
     const todayDate = new  Date().toISOString();
     const [year, month, day] = todayDate.split('T')[0].split("-");
     const fromDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
     const toDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999));
     const donation = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate } });
-    const expenses = await expenseDetail.find({ expensesDate: { $gte: fromDate, $lte: toDate } });
+    const expenses = await ExpenseDetail.find({ expensesDate: { $gte: fromDate, $lte: toDate } });
     const donationSum = donation.reduce((total,donation)=>total+donation.donationAmount, 0)
     const expensesSum = expenses.reduce((total,donation)=>total+donation.expensesAmount, 0)
     console.log("expensesSum"+expensesSum)
@@ -123,4 +123,46 @@ export const totalBalance = async () => {
 };
 
 
+export const getTotalDonation = async () => {
+  try { 
+    const data = await Donation.find()
+    const sum = data.reduce((total,donation)=>total+donation.donationAmount, 0)
+    console.log(sum);
+    return sum;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
 
+export const totalBalance = async () => {
+  try {
+    const donation = await Donation.find();
+    const expenses = await ExpenseDetail.find();
+    const donationSum = donation.reduce((total,donation)=>total+donation.donationAmount, 0)
+    const expensesSum = expenses.reduce((total,donation)=>total+donation.expensesAmount, 0)
+    const totalBalance = donationSum-expensesSum
+    console.log(totalBalance);
+    return totalBalance;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
+
+export const totalCashBalance = async () => {
+  try {
+    const cashDonation = await Donation.find({donationMode: "cash"})
+    const cashExpense = await ExpenseDetail.find({expensesPayemntType: "cash"})
+    const donationSum = cashDonation.reduce((total,donation)=>total+donation.donationAmount, 0)
+    const expensesSum = cashExpense.reduce((total,donation)=>total+donation.expensesAmount, 0)
+    console.log("donationSum :"+donationSum)
+    console.log("expensesSum :"+expensesSum)
+    const totalCashBalance = donationSum-expensesSum
+    return totalCashBalance;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
