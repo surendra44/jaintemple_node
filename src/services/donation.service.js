@@ -167,3 +167,132 @@ export const totalCashBalance = async () => {
     throw new Error(e);
   }
 };
+
+export const totalMothBalance = async (year) => { 
+  try {
+    if (typeof year !== "number" || isNaN(year)) {
+      throw new Error("Invalid year format");
+    }
+    const donation = await DonationMonthWise(year)
+    const expense = await ExpenseMonthWise(year)
+    return {donation,expense};
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
+const DonationMonthWise = async (year) => {
+  try{
+    const donations = await Donation.aggregate([
+      {
+        $match: {
+          donationDate: {
+            $gte: new Date(`${year}-01-01T00:00:00Z`),
+            $lt: new Date(`${year}-12-31T23:59:59.999Z`)
+          }
+        }
+      },
+      {
+        $group: {
+          _id: { month: { $month: "$donationDate" } },
+          donation: { $sum: '$donationAmount' }
+        }
+      },
+      {
+        $addFields: {
+          monthNumber: "$_id.month",
+          monthName: {
+            $let: {
+              vars: {
+                monthsInString: [
+                  "January", "February", "March", "April",
+                  "May", "June", "July", "August",
+                  "September", "October", "November", "December"
+                ],
+                monthIndex: { $subtract: ["$_id.month", 1] }
+              },
+              in: {
+                $arrayElemAt: ["$$monthsInString", "$$monthIndex"]
+              }
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          monthNumber: 1,
+          monthName: 1,
+          donation: 1
+        }
+      },
+      {
+        $sort: { monthNumber: 1 }
+      }
+    ]);
+    return donations;
+  }
+  catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+}
+
+
+const ExpenseMonthWise = async (year) => {
+  try{
+    const expneses = await ExpenseDetail.aggregate([
+      {
+        $match: {
+          expensesDate: {
+            $gte: new Date(`${year}-01-01T00:00:00Z`),
+            $lt: new Date(`${year}-12-31T23:59:59.999Z`)
+          }
+        }
+      },
+      {
+        $group: {
+          _id: { month: { $month: "$expensesDate" } },
+          donation: { $sum: '$expensesAmount' }
+        }
+      },
+      {
+        $addFields: {
+          monthNumber: "$_id.month",
+          monthName: {
+            $let: {
+              vars: {
+                monthsInString: [
+                  "January", "February", "March", "April",
+                  "May", "June", "July", "August",
+                  "September", "October", "November", "December"
+                ],
+                monthIndex: { $subtract: ["$_id.month", 1] }
+              },
+              in: {
+                $arrayElemAt: ["$$monthsInString", "$$monthIndex"]
+              }
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          monthNumber: 1,
+          monthName: 1,
+          donation: 1
+        }
+      },
+      {
+        $sort: { monthNumber: 1 }
+      }
+    ]);
+    return expneses;
+  }
+  catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+}

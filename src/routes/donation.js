@@ -16,6 +16,7 @@ router.get('/totaldayBalance',verifyToken.checkSuperAdmin,donationController.tot
 router.get('/totalDonation',verifyToken.checkSuperAdmin,donationController.getTotalDonation);
 router.get('/totalBalance',verifyToken.checkSuperAdmin,donationController.totalBalance);
 router.get('/totalCashBalance',verifyToken.checkSuperAdmin,donationController.totalCashBalance);
+router.get('/totalMothBalance',verifyToken.checkSuperAdmin,donationController.totalMothBalance);
 
 
 

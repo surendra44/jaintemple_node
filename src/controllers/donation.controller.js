@@ -131,7 +131,16 @@ export const totalCashBalance = async (req, res) => {
   }
 };
 
-// sdfa
+export const totalMothBalance = async (req, res) => {
+  try {
+    const year = req.body.year
+    const result = await donationService.totalMothBalance(year);
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
 
 
 
