@@ -68,8 +68,9 @@ export const getallDonation = async (paginationOptions,filter,sortBy) => {
       .skip(skip)
       .limit(size)
       .populate("eventId")
-      .populate("eventCategoryId")
-      .populate("donarId");
+      .populate("eventCategoryId");
+      
+      
 
     return {
       page,
