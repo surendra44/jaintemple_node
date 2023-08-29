@@ -1,5 +1,8 @@
 const Donation = require("../models/donationDetail");
+const Donar = require("../models/donar");
 const ExpenseDetail = require('../models/expenseDetail');
+const wbm = require('wbm');
+import axios from "axios";
 import { ERROR_MESSAGE } from "../helpers/errorMessage";
 
 
@@ -7,6 +10,12 @@ import { ERROR_MESSAGE } from "../helpers/errorMessage";
 export const addDonation = async (donationDetail) => {
   try {
     const newDonation = await Donation.create(donationDetail);
+    const donarDetail = await Donar.findOne({_id:newDonation.donarId})
+    let  phoneNumber = donarDetail.phoneNumbers[0].Phonenumber1.toString();
+    phoneNumber = "91"+phoneNumber;
+    console.log(phoneNumber)
+    console.log(typeof phoneNumber)
+    const receipt = await whatsAppAPI(phoneNumber);
     return newDonation;
   } catch (e) {
     console.log(e);
@@ -292,6 +301,72 @@ const ExpenseMonthWise = async (year) => {
     return expneses;
   }
   catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+}
+
+
+const whatsAppAPI = async (phoneNumber) => {
+  try{
+    const token = 'Bearer EAASFDxeVDa8BOx4rdptrjKLN2ni7aWGHHw5LxcBIhrPkw9hRs6UCeWyYMv9Mfgny4mVcZB8dZBA0gZCoofXZBJjLNVFH1bENgoXnOqX8vTJrRWrJ7kRsKoLrLJ7HmNhM2J3GDcexcJFxZAcd2mRZABWVzSLp4d0PZAxNOSZAbkt3gZBTXgZA8TghZBnV69LWVfIU1MDuLkrQymVx43gwEZBabWYHOZAbwGM2l0JQZD';
+    const url = ' https://graph.facebook.com/v17.0/117997141392720/messages';
+    const options = {
+      url,
+      method: 'POST',
+      data: { 
+        messaging_product: 'whatsapp',
+        to: '8955951095' ,
+        type: 'template',
+        template: {
+          name: 'hello_world',
+          language: { code: 'en_US' }
+        }
+      },
+      headers: {
+        Authorization: token
+      }
+    }
+    const result = await axios(options);
+    console.log(result)
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+}
+
+
+export const top15MaxDonar = async () => {
+  try{
+const resutl = await Donation.aggregate([
+  // Match documents where donationStatus is "Pending" (or any other condition you prefer)
+  {
+      $match: {
+          donationStatus: "Done"
+      }
+  },
+  // Group documents by donorId and calculate the total donationAmount for each donor
+  {
+      $group: {
+          _id: "$donarId",
+          totalDonationAmount: { $sum: "$donationAmount" }
+      }
+  },
+  // Sort the donors by totalDonationAmount in descending order
+  {
+      $sort: {
+          totalDonationAmount: -1
+      }
+  },
+  // Limit the result to the top 2 donors
+  {
+      $limit: 15
+  }
+])
+
+
+  return resutl;
+  }  catch (e) {
     console.log(e);
     throw new Error(e);
   }
