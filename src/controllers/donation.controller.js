@@ -145,4 +145,13 @@ export const totalMothBalance = async (req, res) => {
 
 
 
+export const top15MaxDonar = async (req, res) => {
+  try {
+    const result = await donationService.top15MaxDonar();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
 
