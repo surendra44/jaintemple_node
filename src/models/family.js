@@ -22,6 +22,9 @@ const familySchema = mongoose.Schema(
     dob: {
       type: Date,
     },
+    dateOfAnniversary:{
+      type: Date,
+  },
     email: {
       type: String,
       trim: true,

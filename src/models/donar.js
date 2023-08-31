@@ -25,6 +25,9 @@ const donerSchema = mongoose.Schema(
             type: Date,
           
         }, 
+        dateOfAnniversary:{
+            type: Date,
+        },
         email: {
             type: String,
             trim: true,
@@ -52,7 +55,18 @@ const donerSchema = mongoose.Schema(
             country: { type: String },
         },
         members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Family' }],
+        isHead: {
+            type: Boolean,
+            default: false,
+        },
+        gotr: {
+            type: String
+        },
         isActive: {
+            type: Boolean,
+            default: true,
+        },
+        isRegister: {
             type: Boolean,
             default: true,
         },
