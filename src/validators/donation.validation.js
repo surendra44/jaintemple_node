@@ -15,6 +15,12 @@ export const createDonation = {
     donationAccNumber: Joi.string(),
     donateToAccNumber: Joi.string(),
     donationDate: Joi.date().iso(),
+    dailyEvent: Joi.array().items(
+      Joi.object().keys({
+        dailyEventCategory: Joi.custom(objectId).allow(null),
+        donateEventAmount: Joi.number().allow(""),
+      })
+    ),
   }),
 };
 
