@@ -6,6 +6,8 @@ import eventRoutes from "./event";
 import donationRoutes from "./donation";
 import expCatRoutes from "./expensesCategory";
 import expenseRoute from "./expense";
+import dailyEventRoute from "./dailyEvent";
+import { dailyEventService } from "../services";
 
 const router = express.Router();
 
@@ -16,5 +18,6 @@ router.use("/event",  eventRoutes);
 router.use("/donation",  donationRoutes);
 router.use("/expensecat",  expCatRoutes);
 router.use("/expense",  expenseRoute);
+router.use("/dailyEvent", dailyEventRoute);
 
 export default router;

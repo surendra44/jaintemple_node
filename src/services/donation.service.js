@@ -15,7 +15,7 @@ export const addDonation = async (donationDetail) => {
     phoneNumber = "91"+phoneNumber;
     console.log(phoneNumber)
     console.log(typeof phoneNumber)
-    const receipt = await whatsAppAPI(phoneNumber);
+    // const receipt = await whatsAppAPI(phoneNumber);
     return newDonation;
   } catch (e) {
     console.log(e);

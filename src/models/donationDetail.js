@@ -4,17 +4,18 @@ const donationSchema = new mongoose.Schema({
   donarId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Donar',
-    required: true, // Reference to Doner model
+    required: true, 
   },
   eventId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'EventDetail', // Reference to EventDetail model
+    ref: 'EventDetail', 
   },
   eventCategoryId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'EventCategory', // Reference to EventDetail model
-
+    ref: 'EventCategory', 
   },
+  dailyEvent :[{ dailyEventCategory:{
+    type: mongoose.Schema.Types.ObjectId,ref: 'dailyCategoryEvent'},donateEventAmount:Number}], 
   templeId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'TempleDetail', // Reference to TempleDetail model
@@ -30,7 +31,6 @@ const donationSchema = new mongoose.Schema({
   },
   donationStatus: {
     type: String,
-   
   },
   donationDetail: {
     type: String,

@@ -6,3 +6,4 @@ module.exports.eventDetailService = require('./eventDetail.service');
 module.exports.donationService = require('./donation.service');
 module.exports.expenseCategoryService = require('./expenseCateogy');
 module.exports.expenseService = require('./expense.service');
+module.exports.dailyEventService = require('./dailyEvent.service');
