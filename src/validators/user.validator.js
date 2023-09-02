@@ -93,3 +93,17 @@ export const getTempleById = {
     id: Joi.required().custom(objectId),
   }),
 }
+
+export const softdelteUserById = {
+  params: Joi.object().keys({
+    id: Joi.required().custom(objectId),
+    status: Joi.string().required(),
+  })
+};
+
+
+export const getUserById = {
+  params: Joi.object().keys({
+    id: Joi.required().custom(objectId),
+  }),
+};
