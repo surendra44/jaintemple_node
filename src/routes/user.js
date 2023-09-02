@@ -11,7 +11,7 @@ const router = express.Router({ mergeParams: true });
 
 
 
-router.post("/addUser",verifyToken.checkSuperAdmin,validate(userValidation.createUser), userController.registerUser);
+router.post("/addUser",validate(userValidation.createUser), userController.registerUser);
 router.post('/login', validate(userValidation.login),userController.login);
 router.put('/updateUser/:userId',verifyToken.checkSuperAdmin,validate(userValidation.updateUser),userController.updateUser);
 router.get('/allUser',verifyToken.checkSuperAdmin,userController.allUser);
