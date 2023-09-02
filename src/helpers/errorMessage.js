@@ -13,4 +13,9 @@ export const ERROR_MESSAGE = {
     GetID:"The Donar ID you are trying Find is not Found"
   },
 
+  USER:{
+    Delete:"The User ID you are trying delete is not Found",
+    GetID:"The User ID you are trying Find is not Found"
+  },
+
 };

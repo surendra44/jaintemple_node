@@ -34,5 +34,50 @@ export const login = async (req, res) => {
       return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
     }
   };
-  
 
+  export const allUser = async (req, res) => {
+    try {
+      const { page, size, search,sort } = req.query;
+    
+      const paginationOptions = {
+        page: parseInt(page) || 1,
+        size: parseInt(size) || 10,
+      };
+    
+      const filter = {
+        $and: [
+          { $or: [{ name: { $regex: search || "", $options: "i" } }] },
+          { Isdeleted: false }, // Include the condition for Isdeleted: false
+        ],
+      };
+    
+      const sortingOptions = sort ? sort.split(",") : ["donationDate", "asc"];
+      const sortBy = { [sortingOptions[0]]: sortingOptions[1] };
+      const result = await userService.allUser(paginationOptions,filter,sortBy);
+      return successResponse(req, res, result);
+    } catch (error) {
+      return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+    }
+  };
+  
+  export const changeUserStatus = async (req, res) => {
+    const id = req.params.id;
+    const status = req.params.status;
+    try {
+      const result = await userService.changeUserStatus(id,status);
+      return successResponse(req, res, result);
+    } catch (error) {
+      return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+    }
+  };
+
+
+  export const getUserById = async (req, res) => {
+    const userId = req.params.id;
+    try {
+      const result = await userService.UserById(userId);
+      return successResponse(req, res, result);
+    }catch (error) {
+      return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+    }
+  };
