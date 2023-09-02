@@ -39,7 +39,7 @@ export const addUser = async function (body) {
 
 export const getUserById = async (userId) => {
     try {
-        let result = await User.findOne({_id:userId});
+        let result = await User.findOne({_id:userId}).populate("role");
         if(!result) throw new Error(ERROR_MESSAGE.ADMIN.NOT_FOUND);
         return result;
     } catch (e) {
