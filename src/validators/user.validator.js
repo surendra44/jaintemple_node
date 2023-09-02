@@ -20,6 +20,16 @@ const addressSchema = Joi.object({
   country: Joi.string().required()
 });
 
+const updateaddressSchema = Joi.object({
+  line_1: Joi.string(),
+  line_2: Joi.string().allow(''),
+  line_3: Joi.string().allow(''),
+  city: Joi.string(),
+  state: Joi.string(),
+  pincode: Joi.number(),
+  country: Joi.string()
+});
+
 
 export const createUser = {
     body: Joi.object().keys({
@@ -29,7 +39,7 @@ export const createUser = {
       role: Joi.string().required(),
       temple: Joi.string(),
       loginId: Joi.string().required(),
-      address: addressSchema,
+      address: updateaddressSchema,
       phonenumber: Joi.number(),
     }),
   };
@@ -48,12 +58,11 @@ export const createUser = {
     }),
     body: Joi.object()
       .keys({
-        email: Joi.string().required().email(),
-        password: Joi.string().required().custom(password),
-        name: Joi.string().required(),
+        email: Joi.string().email(),
+        name: Joi.string(),
         temple: Joi.string(),
-        role: Joi.string().required(),
-        loginId: Joi.string().required(),
+        role: Joi.string(),
+        loginId: Joi.string(),
         address: addressSchema,
         phonenumber: Joi.number(),
       })

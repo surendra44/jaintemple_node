@@ -82,12 +82,7 @@ export const loginUser = async (loginId, password) => {
   
 export const updateUser = async function (userId, updatedUserData) {
   try {
-    const roleName = updatedUserData.role;
-    console.log(userId);
-    const role = await Role.findOne({ name: roleName });
-    if (!role) {
-      throw new Error(`Role '${roleName}' not found. Admin cannot be created.`);
-    }
+
     const existingUser = await User.findById(userId);
     if (!existingUser) {
       throw new Error(`User with ID '${userId}' not found.`);
@@ -97,8 +92,7 @@ export const updateUser = async function (userId, updatedUserData) {
     existingUser.address = updatedUserData.address;
     existingUser.loginId = updatedUserData.loginId;
     existingUser.email = updatedUserData.email;
-    existingUser.password = updatedUserData.password;
-    existingUser.role = role._id;
+    existingUser.role = updatedUserData.role;
 
     await existingUser.save();
     const result = await getUserById(existingUser._id);
