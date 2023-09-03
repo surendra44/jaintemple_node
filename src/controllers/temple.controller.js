@@ -5,7 +5,7 @@ const { templeService } = require('../services');
 // Controller to handle temple registration
 export const registerTemple = async (req, res) => {
   try {
-    const templeData = req.body; // Temple data sent in the request body
+    const templeData = req.body; 
     const result = await templeService.addtemple(templeData);
     return successResponse(req, res, result);
   } catch (error) {
