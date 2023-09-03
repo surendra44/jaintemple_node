@@ -10,13 +10,6 @@ const auth_utilities = require("../helpers/auth_utilities")
 
 export const addUser = async function (body) {
     try {
-        const roleName = body.role;
-        const role = await Role.findOne({ name: roleName });
-        console.log(role)
-        if (!role) {
-            throw new Error(`Role '${roleName}' not found. Admin cannot be created.`);
-        }
-        console.log(body);
         const newAdmin = new User({
             name: body.name,
             phonenumber: body.phonenumber,
@@ -25,7 +18,7 @@ export const addUser = async function (body) {
             email: body.email,
             password: body.password,
             temple: new mongoose.Types.ObjectId(body.temple),
-            role: role._id,
+            role: body.role
           });
         await newAdmin.save();
         const result = await getUserById(newAdmin._id);
@@ -155,7 +148,7 @@ export const changeUserStatus = async (id, status) => {
 
 export const UserById = async (userId) => {
   try {
-    const user = await User.findById(userId)
+    const user = await User.findById(userId).populate("role")
       .select("-createdBy -updatedBy -__v  -createdAt -updatedAt ")
     if (!user) throw new Error(ERROR_MESSAGE.USER.GetID);
     return user;
