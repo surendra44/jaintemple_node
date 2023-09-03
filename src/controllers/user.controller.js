@@ -47,7 +47,7 @@ export const login = async (req, res) => {
       const filter = {
         $and: [
           { $or: [{ name: { $regex: search || "", $options: "i" } }] },
-          { Isdeleted: false }, // Include the condition for Isdeleted: false
+          { Isdeleted: false }, 
         ],
       };
     
