@@ -2,18 +2,27 @@ import Joi from "joi";
 const { objectId } = require("./custom.validation");
 
 const addressSchema = Joi.object({
-  line_1: Joi.string().required(),
+  line_1: Joi.string(),
   line_2: Joi.string().allow(""),
   line_3: Joi.string().allow(""),
-  city: Joi.string().required(),
-  state: Joi.string().required(),
+  city: Joi.string(),
+  state: Joi.string(),
   pincode: Joi.number(),
-  country: Joi.string().required(),
+  country: Joi.string(),
 });
 
 const phoneNumberSchema = Joi.object({
-  Phonenumber1: Joi.string().pattern(new RegExp("^[0-9]{10}$")).required(),
-  Phonenumber2: Joi.string().pattern(new RegExp("^[0-9]{10}$")).allow(""),
+  Phonenumber1: Joi.string()
+        .length(10)
+        .regex(/^[0-9]{10}$/)
+        .required()
+        .messages({
+          "any.required": `Whatsapp number  is a required field`,
+          "string.length": `Whatsapp number length should be 10 digits`,
+        }),
+  Phonenumber2: Joi.string().length(10).regex(/^[0-9]{10}$/).allow("").messages({
+    "string.length": `Phone length should be 10 digits`,
+  }),
 });
 
 const memberSchema = Joi.object({
@@ -21,7 +30,8 @@ const memberSchema = Joi.object({
   image: Joi.string().allow(""),
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
-  phoneNumber: Joi.string().pattern(new RegExp("^[0-9]{10}$")),
+  phoneNumber: Joi.string().length(10).regex(/^[0-9]{10}$/).allow("").messages({
+    "string.length": `Member Phone  length should be 10 digits` }),
   relation: Joi.string().required(),
   dob: Joi.date().iso(),
   dateOfAnniversary: Joi.date().iso(),
@@ -39,7 +49,7 @@ export const createDonor = {
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
     phoneNumbers: Joi.array().items(phoneNumberSchema).required(),
-    dob: Joi.date().iso().required(),
+    dob: Joi.date().iso(),
     dateOfAnniversary: Joi.date().iso(),
     gotr: Joi.string(), 
     occupation: Joi.string(),
