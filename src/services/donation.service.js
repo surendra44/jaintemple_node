@@ -95,6 +95,36 @@ export const getallDonation = async (paginationOptions,filter,sortBy) => {
 };
 
 
+export const  getallPendingDonation = async (paginationOptions,filter,sortBy) => {
+  try {
+    const { page, size } = paginationOptions;
+
+    const totalDocuments = await Donation.countDocuments(filter);
+    const totalPages = Math.ceil(totalDocuments / size);
+    const skip = (page - 1) * size;
+
+    const result = await Donation.find(filter)
+      .sort(sortBy)
+      .skip(skip)
+      .limit(size)
+      .populate("eventId")
+      .populate("eventCategoryId")
+      .populate("donarId");
+
+    return {
+      page,
+      size,
+      data: result,
+      previousPage: page > 1 ? page - 1 : null,
+      nextPage: page < totalPages ? page + 1 : null,
+      totalDocuments,
+    };
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
 export const getDayDonation = async () => {
   try {
     const todayDate = new  Date().toISOString();
