@@ -25,6 +25,9 @@ const expensesDetailSchema = new mongoose.Schema({
   expensesAccNumberTo: {
     type: String,
   },
+  payeeName: {
+    type: String,
+  },
   expensesAmount: {
     type: Number,
   },
