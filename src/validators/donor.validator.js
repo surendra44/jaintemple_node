@@ -61,6 +61,7 @@ export const createDonor = {
     isRegister:Joi.boolean().allow(""),
     address: addressSchema.allow(""),
     members: Joi.array().items(memberSchema),
+    donation:Joi.any().allow("")
   }),
 };
 
