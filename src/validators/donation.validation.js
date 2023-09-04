@@ -11,9 +11,9 @@ export const createDonation = {
     donationMode: Joi.string().required(),
     donationAmount: Joi.number().required(),
     donationStatus: Joi.string().required(),
-    donationDetail: Joi.string(),
-    donationAccNumber: Joi.string(),
-    donateToAccNumber: Joi.string(),
+    donationDetail: Joi.string().allow(""),
+    donationAccNumber: Joi.string().allow(""),
+    donateToAccNumber: Joi.string().allow(""),
     donationDate: Joi.date().iso(),
     dailyEvent: Joi.array().items(
       Joi.object().keys({
@@ -36,9 +36,9 @@ export const updateDonation = {
     donationMode: Joi.string().required(),
     donationAmount: Joi.number().required(),
     donationStatus: Joi.string().required(),
-    donationDetail: Joi.string(),
-    donationAccNumber: Joi.string(),
-    donateToAccNumber: Joi.string(),
+    donationDetail: Joi.string().allow(""),
+    donationAccNumber: Joi.string().allow(""),
+    donateToAccNumber: Joi.string().allow(""),
     donationDate: Joi.date().iso(),
     dailyEvent: Joi.array().items(
       Joi.object().keys({

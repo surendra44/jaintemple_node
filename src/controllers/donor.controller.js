@@ -18,6 +18,20 @@ export const registerDonor = async (req, res) => {
     }
 };
 
+export const registerGuest = async (req, res) => {
+  const userCreateadBy = req.userId;
+  const templeId = req.templeId;
+  const{ donation,...rest } = req.body;
+  try {
+    const mainDonarInfo = { ...rest, createdBy: new mongoose.Types.ObjectId(userCreateadBy), updatedBy: new mongoose.Types.ObjectId(userCreateadBy) };
+    const result = await donorService.registerGuest({...donation,templeId},mainDonarInfo);
+    return successResponse(req, res, result);
+  } catch (error) {
+      return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+    }
+};
+
+
 
 export const updateDonarInfo = async (req, res) => {
   const userCreateadBy = req.userId;

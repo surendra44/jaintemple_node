@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Donar = require("../models/donar");
 const Family = require("../models/family");
+const Donation = require("../models/donationDetail")
 import { ERROR_MESSAGE } from "../helpers/errorMessage";
 
 export const registerDonor = async (userCreateadBy, members, mainDonarInfo) => {
@@ -48,6 +49,38 @@ export const createFamilyMembers = async (userId, members, userCreateadBy) => {
       success: false,
       message:
         "There was a problem adding members please check the info again.",
+    };
+  }
+};
+
+
+export const registerGuest = async (donationInfo,mainDonarInfo) => {
+  try {
+    const newMainUser = await Donar.create(mainDonarInfo);
+    const donarId = newMainUser._id
+    console.log(newMainUser._id);
+    let result = { success: true, mainDonar: mainDonarInfo };
+    if (donationInfo && donationInfo.donationAmount > 0) {
+         const donation = await createDonation({...donationInfo,donarId});
+          result = {...result ,donation}
+    }
+    return result;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
+export const createDonation= async (donationInfo ) => {
+  try {
+    const result = await Donation.create(donationInfo);
+    return { success: true, data: result, message: "" };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message:
+        "There was a problem adding donation please check the info again.",
     };
   }
 };

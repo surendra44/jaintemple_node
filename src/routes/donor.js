@@ -7,6 +7,7 @@ const donorValidation = require('../validators/donor.validator');
 const router = express.Router({ mergeParams: true });
 
 router.post('/donarRegister',verifyToken.checkSuperAdmin,validate(donorValidation.createDonor),donorController.registerDonor);
+router.post('/registerGuest',verifyToken.checkSuperAdmin,validate(donorValidation.createDonor),donorController.registerGuest);
 router.get('/getdonor/:id',verifyToken.checkSuperAdmin,validate(donorValidation.getDonorById),donorController.getDonorById);
 
 
