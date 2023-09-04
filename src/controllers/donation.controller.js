@@ -69,8 +69,9 @@ export const  deleteDonation= async (req, res) => {
       };
     
       const filter = {
-        $or: [
-          { donationMode: { $regex: search || "", $options: "i" } }
+        $and: [
+          { donationMode: { $regex: search || "", $options: "i" } },
+          { donationStatus: "Complete" },
         ],
       };
     
@@ -81,6 +82,30 @@ export const  deleteDonation= async (req, res) => {
     } catch (error) {
       return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
     }
+}
+
+export const getallPendingDonation = async(req, res)=> {
+  try {
+    const { page, size, search,sort } = req.query;
+    const paginationOptions = {
+      page: parseInt(page) || 1,
+      size: parseInt(size) || 10,
+    };
+  
+    const filter = {
+      $and: [
+        { donationMode: { $regex: search || "", $options: "i" } },
+        { donationStatus: "Pending" },
+      ],
+    };
+  
+    const sortingOptions = sort ? sort.split(",") : ["donationDate", "asc"];
+    const sortBy = { [sortingOptions[0]]: sortingOptions[1] };
+    const result = await donationService.getallPendingDonation(paginationOptions,filter,sortBy);
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
 }
 
 export const getDayDonation = async (req, res) => {
