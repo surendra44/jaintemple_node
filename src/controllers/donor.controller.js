@@ -57,7 +57,7 @@ export const getAllDonors = async (req, res) => {
     size: parseInt(size) 
   };
 
-  const filter = {
+  const donorfilter = {
     $or: [
       { firstName: { $regex: search || "", $options: "i" } },
       { "phoneNumbers.Phonenumber1": { $regex: search || "", $options: "i" } },
@@ -65,9 +65,16 @@ export const getAllDonors = async (req, res) => {
     ],
   };
 
+  const familyfilter = {
+    $or: [
+      { firstName: { $regex: search || "", $options: "i" } },
+      { phoneNumber: { $regex: search || "", $options: "i" } }
+    ],
+  };
+
   const sortingOptions = sort ? sort.split(",") : ["_id", "asc"];
   const sortBy = { [sortingOptions[0]]: sortingOptions[1] };
-  const result = await donorService.getAllDonorsWithMembers(paginationOptions,filter,sortBy);
+  const result = await donorService.getAllDonorsWithMembers(paginationOptions,donorfilter,familyfilter,sortBy);
   return successResponse(req, res, result);
 } catch (error) {
   return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
