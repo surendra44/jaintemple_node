@@ -178,41 +178,48 @@ export const changeUserStatus = async (id, status, parentornot) => {
   }
 };
 
-export const getAllDonorsWithMembers = async (
-  paginationOptions,
-  filter,
-  sortBy
-) => {
+export const getAllDonorsWithMembers = async (paginationOptions,filter,sortBy) => {
   try {
     const { page, size } = paginationOptions;
 
     const totalDonarCount = await Donar.countDocuments(filter);
-    const totalFamliesCount = await Donar.countDocuments(filter);
-    const totalDocuments = totalDonarCount+totalFamliesCount;
+    const totalFamiliesCount = await Family.countDocuments(filter); // Use Family collection for counting families
+    const totalDocuments = totalDonarCount + totalFamiliesCount;
     const totalPages = Math.ceil(totalDocuments / size);
     const skip = (page - 1) * size;
 
-    const donar = await Donar.find(filter).sort(sortBy)
-    .skip(skip)
-    .limit(size)
-    .populate("members");
-    const result = donar;
-    let limit = 10;
-    if (donar.length < size) {
-      limit = size - donar.length;
-      const skipFamilies = 0;
-      if (donar.length === 0) {
-        limit = 10;
-        const donarSkip = ((page -1) - 1) * size;
-        
-      }
-      const limit = size - donar.length;
-      const famlies = await Family.find(filter).sort(sortBy)
+    const donors = await Donar.find(filter).sort(sortBy)
       .skip(skip)
-      .limit(limit); 
+      .limit(size)
+      .populate("members");
+
+    let result = donors;
+    let familyLimit = 0;
+    let familySkip = 0;
+
+    if (donors.length < size) {
+      familyLimit = size - donors.length;
+
+      if (donors.length === 0) {
+        familyLimit = 15;
+      } else {
+        const donorCount = donors.length;
+        const remainingFamilyRecords = size - donorCount;
+        familySkip = remainingFamilyRecords > 0 ? remainingFamilyRecords : 0;
+      }
     }
 
+    const families = await Family.find(filter)
+      .sort(sortBy)
+      .skip(familySkip)
+      .limit(familyLimit);
 
+    if (result.length + families.length > size) {
+      const remainingSpace = size - result.length;
+      result = result.concat(families.slice(0, remainingSpace));
+    } else {
+      result = result.concat(families);
+    }
 
     return {
       page,
