@@ -23,6 +23,7 @@ router.get('/todayOnlineBalance',verifyToken.checkSuperAdmin,donationController.
 router.get('/totalDonation',verifyToken.checkSuperAdmin,donationController.getTotalDonation);
 router.get('/totalBalance',verifyToken.checkSuperAdmin,donationController.totalBalance);
 router.get('/totalCashBalance',verifyToken.checkSuperAdmin,donationController.totalCashBalance);
+router.get('/totalPendingBalance',verifyToken.checkSuperAdmin,donationController.totalPendingBalance);
 router.post('/expense-and-donaion',verifyToken.checkSuperAdmin,donationController.totalMothBalance);
 router.get('/top15MaxDonar',verifyToken.checkSuperAdmin,donationController.top15MaxDonar);
 

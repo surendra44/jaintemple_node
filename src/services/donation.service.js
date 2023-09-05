@@ -273,7 +273,7 @@ export const todayCashBalance = async () => {
     const [year, month, day] = todayDate.split('T')[0].split("-");
     const fromDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
     const toDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999));
-    const donation = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate },donationStatus:"Complete",donationMode: "cash" });
+    const donation = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate },donationStatus:"Complete",donationMode: "Cash" });
     const expenses = await ExpenseDetail.find({ expensesDate: { $gte: fromDate, $lte: toDate } });
     const donationSum = donation.reduce((total,donation)=>total+donation.donationAmount, 0)
     const expensesSum = expenses.reduce((total,donation)=>total+donation.expensesAmount, 0)
@@ -294,7 +294,7 @@ export const todayOnlineBalance = async () => {
     const [year, month, day] = todayDate.split('T')[0].split("-");
     const fromDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
     const toDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999));
-    const donation = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate },donationStatus:"Complete",donationMode: "online" });
+    const donation = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate },donationStatus:"Complete",donationMode: "Online" });
     const expenses = await ExpenseDetail.find({ expensesDate: { $gte: fromDate, $lte: toDate } });
     const donationSum = donation.reduce((total,donation)=>total+donation.donationAmount, 0)
     const expensesSum = expenses.reduce((total,donation)=>total+donation.expensesAmount, 0)
@@ -338,10 +338,27 @@ export const totalBalance = async () => {
 };
 
 
+export const totalPendingBalance = async () => {
+  try {
+    const cashDonation = await Donation.find({donationMode: "Pending"})
+    const cashExpense = await ExpenseDetail.find({expensesPayemntType: "Pending"})
+    const donationSum = cashDonation.reduce((total,donation)=>total+donation.donationAmount, 0)
+    const expensesSum = cashExpense.reduce((total,donation)=>total+donation.expensesAmount, 0)
+    console.log("donationSum :"+donationSum)
+    console.log("expensesSum :"+expensesSum)
+    const totalCashBalance = donationSum-expensesSum
+    return totalCashBalance;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
+
 export const totalCashBalance = async () => {
   try {
-    const cashDonation = await Donation.find({donationMode: "cash"})
-    const cashExpense = await ExpenseDetail.find({expensesPayemntType: "cash"})
+    const cashDonation = await Donation.find({donationMode: "Cash"})
+    const cashExpense = await ExpenseDetail.find({expensesPayemntType: "Cash"})
     const donationSum = cashDonation.reduce((total,donation)=>total+donation.donationAmount, 0)
     const expensesSum = cashExpense.reduce((total,donation)=>total+donation.expensesAmount, 0)
     console.log("donationSum :"+donationSum)
