@@ -205,7 +205,7 @@ export const getAllDonorsWithMembers = async (paginationOptions, filter, sortBy)
       familyLimit = size - donors.length;
 
       if (donors.length === 0) {
-        familyLimit = 15;
+        familyLimit = 1;
       } else {
         const donorCount = donors.length;
         const remainingFamilyRecords = size - donorCount;
