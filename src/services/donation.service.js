@@ -340,13 +340,13 @@ export const totalBalance = async () => {
 
 export const totalPendingBalance = async () => {
   try {
-    const cashDonation = await Donation.find({donationMode: "Pending"})
-    const cashExpense = await ExpenseDetail.find({expensesPayemntType: "Pending"})
+    const cashDonation = await Donation.find({donationStatus: "Pending"})
+    // const cashExpense = await ExpenseDetail.find({expensesPayemntType: "Pending"})
     const donationSum = cashDonation.reduce((total,donation)=>total+donation.donationAmount, 0)
-    const expensesSum = cashExpense.reduce((total,donation)=>total+donation.expensesAmount, 0)
+    // const expensesSum = cashExpense.reduce((total,donation)=>total+donation.expensesAmount, 0)
     console.log("donationSum :"+donationSum)
-    console.log("expensesSum :"+expensesSum)
-    const totalCashBalance = donationSum-expensesSum
+    // console.log("expensesSum :"+expensesSum)
+    const totalCashBalance = donationSum
     return totalCashBalance;
   } catch (e) {
     console.log(e);
