@@ -322,6 +322,30 @@ export const getTotalDonation = async () => {
   }
 };
 
+export const totalOnlineDonation = async () => {
+  try { 
+    const data = await Donation.find({donationStatus:"Complete",donationMode:"Online"})
+    const sum = data.reduce((total,donation)=>total+donation.donationAmount, 0)
+    console.log(sum);
+    return sum;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
+export const totalCashDonation = async () => {
+  try { 
+    const data = await Donation.find({donationStatus:"Complete",donationMode:"Cash"})
+    const sum = data.reduce((total,donation)=>total+donation.donationAmount, 0)
+    console.log(sum);
+    return sum;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
 export const totalBalance = async () => {
   try {
     const donation = await Donation.find({donationStatus:"Complete"});
@@ -357,7 +381,7 @@ export const totalPendingBalance = async () => {
 
 export const totalCashBalance = async () => {
   try {
-    const cashDonation = await Donation.find({donationMode: "Cash"})
+    const cashDonation = await Donation.find({donationStatus:"Complete",donationMode: "Cash"})
     const cashExpense = await ExpenseDetail.find({expensesPayemntType: "Cash"})
     const donationSum = cashDonation.reduce((total,donation)=>total+donation.donationAmount, 0)
     const expensesSum = cashExpense.reduce((total,donation)=>total+donation.expensesAmount, 0)
@@ -370,6 +394,23 @@ export const totalCashBalance = async () => {
     throw new Error(e);
   }
 };
+
+export const totalOnlineBalance = async () => {
+  try {
+    const cashDonation = await Donation.find({donationStatus:"Complete",donationMode: "Online"})
+    const cashExpense = await ExpenseDetail.find({expensesPayemntType: "Online"})
+    const donationSum = cashDonation.reduce((total,donation)=>total+donation.donationAmount, 0)
+    const expensesSum = cashExpense.reduce((total,donation)=>total+donation.expensesAmount, 0)
+    console.log("donationSum :"+donationSum)
+    console.log("expensesSum :"+expensesSum)
+    const totalCashBalance = donationSum-expensesSum
+    return totalCashBalance;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
 
 export const totalMothBalance = async (year) => { 
   try {

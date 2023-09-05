@@ -21,9 +21,12 @@ router.get('/totaldayBalance',verifyToken.checkSuperAdmin,donationController.tot
 router.get('/todayCashBalance',verifyToken.checkSuperAdmin,donationController.todayCashBalance);
 router.get('/todayOnlineBalance',verifyToken.checkSuperAdmin,donationController.todayOnlineBalance);
 router.get('/totalDonation',verifyToken.checkSuperAdmin,donationController.getTotalDonation);
+router.get('/totalOnlineDonation',verifyToken.checkSuperAdmin,donationController.totalOnlineDonation);
+router.get('/totalCashDonation',verifyToken.checkSuperAdmin,donationController.totalCashDonation);
+router.get('/totalPendingDonation',verifyToken.checkSuperAdmin,donationController.totalPendingBalance);
 router.get('/totalBalance',verifyToken.checkSuperAdmin,donationController.totalBalance);
 router.get('/totalCashBalance',verifyToken.checkSuperAdmin,donationController.totalCashBalance);
-router.get('/totalPendingBalance',verifyToken.checkSuperAdmin,donationController.totalPendingBalance);
+router.get('/totalOnlineBalance',verifyToken.checkSuperAdmin,donationController.totalOnlineBalance);
 router.post('/expense-and-donaion',verifyToken.checkSuperAdmin,donationController.totalMothBalance);
 router.get('/top15MaxDonar',verifyToken.checkSuperAdmin,donationController.top15MaxDonar);
 

@@ -191,6 +191,23 @@ export const getTotalDonation = async (req, res) => {
   }
 };
 
+export const totalOnlineDonation = async (req, res) => {
+  try {
+    const result = await donationService.totalOnlineDonation();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+export const  totalCashDonation = async (req, res) => {
+  try {
+    const result = await donationService.totalCashDonation();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
 
 export const totalBalance = async (req, res) => {
   try {
@@ -205,6 +222,15 @@ export const totalBalance = async (req, res) => {
 export const totalCashBalance = async (req, res) => {
   try {
     const result = await donationService.totalCashBalance();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+export const totalOnlineBalance = async (req, res) => {
+  try {
+    const result = await donationService.totalOnlineBalance();
     return successResponse(req, res, result);
   } catch (error) {
     return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
