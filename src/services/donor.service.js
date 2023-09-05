@@ -178,20 +178,24 @@ export const changeUserStatus = async (id, status, parentornot) => {
   }
 };
 
-export const getAllDonorsWithMembers = async (paginationOptions,filter,sortBy) => {
+export const getAllDonorsWithMembers = async (paginationOptions, filter, sortBy) => {
   try {
     const { page, size } = paginationOptions;
 
     const totalDonarCount = await Donar.countDocuments(filter);
-    const totalFamiliesCount = await Family.countDocuments(filter); // Use Family collection for counting families
+    const totalFamiliesCount = await Family.countDocuments(filter);
     const totalDocuments = totalDonarCount + totalFamiliesCount;
     const totalPages = Math.ceil(totalDocuments / size);
     const skip = (page - 1) * size;
 
-    const donors = await Donar.find(filter).sort(sortBy)
-      .skip(skip)
-      .limit(size)
-      .populate("members");
+    const donorsQuery = Donar.find(filter).sort(sortBy).skip(skip).populate("members");
+
+    // Check if size is provided and greater than 0, otherwise retrieve all documents
+    if (size && size > 0) {
+      donorsQuery.limit(size);
+    }
+
+    const donors = await donorsQuery;
 
     let result = donors;
     let familyLimit = 0;
@@ -209,10 +213,7 @@ export const getAllDonorsWithMembers = async (paginationOptions,filter,sortBy) =
       }
     }
 
-    const families = await Family.find(filter)
-      .sort(sortBy)
-      .skip(familySkip)
-      .limit(familyLimit);
+    const families = await Family.find(filter).sort(sortBy).skip(familySkip);
 
     if (result.length + families.length > size) {
       const remainingSpace = size - result.length;
@@ -230,10 +231,11 @@ export const getAllDonorsWithMembers = async (paginationOptions,filter,sortBy) =
       totalDocuments,
     };
   } catch (e) {
-    console.log(e);
+    console.error(e);
     throw new Error(e);
   }
 };
+
 // fghdfhdfhfgd
 
 export const getDonorByIdWithMembers = async (donorId) => {
