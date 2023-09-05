@@ -186,15 +186,33 @@ export const getAllDonorsWithMembers = async (
   try {
     const { page, size } = paginationOptions;
 
-    const totalDocuments = await Donar.countDocuments(filter);
+    const totalDonarCount = await Donar.countDocuments(filter);
+    const totalFamliesCount = await Donar.countDocuments(filter);
+    const totalDocuments = totalDonarCount+totalFamliesCount;
     const totalPages = Math.ceil(totalDocuments / size);
     const skip = (page - 1) * size;
 
-    const result = await Donar.find(filter)
-      .sort(sortBy)
+    const donar = await Donar.find(filter).sort(sortBy)
+    .skip(skip)
+    .limit(size)
+    .populate("members");
+    const result = donar;
+    let limit = 10;
+    if (donar.length < size) {
+      limit = size - donar.length;
+      const skipFamilies = 0;
+      if (donar.length === 0) {
+        limit = 10;
+        const donarSkip = ((page -1) - 1) * size;
+        
+      }
+      const limit = size - donar.length;
+      const famlies = await Family.find(filter).sort(sortBy)
       .skip(skip)
-      .limit(size)
-      .populate("members");
+      .limit(limit); 
+    }
+
+
 
     return {
       page,

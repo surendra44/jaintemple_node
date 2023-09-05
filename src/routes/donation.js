@@ -12,8 +12,14 @@ router.delete('/deleteDonation/:id',verifyToken.checkSuperAdmin,validate(donatio
 router.get('/getDonation/:id',verifyToken.checkSuperAdmin,validate(donationValidation.getDonationById),donationController.getDoationById);
 router.get('/getallDonation',verifyToken.checkSuperAdmin,donationController.getallDonation);
 router.get('/getallPendingDonation',verifyToken.checkSuperAdmin,donationController.getallPendingDonation);
-router.get('/getbyDayDonation',verifyToken.checkSuperAdmin,donationController.getDayDonation);
+router.get('/todayDayDonation',verifyToken.checkSuperAdmin,donationController.getDayDonation);
+router.get('/todayCashDonation',verifyToken.checkSuperAdmin,donationController.getDayCashDonation);
+router.get('/todayOnlineDonation',verifyToken.checkSuperAdmin,donationController.getbyDayOnlineDonation);
+router.get('/todaychequeDonation',verifyToken.checkSuperAdmin,donationController.getbyDaychequeDonation);
+router.get('/todayPendingDonation',verifyToken.checkSuperAdmin,donationController.getbyDayPendingDonation);
 router.get('/totaldayBalance',verifyToken.checkSuperAdmin,donationController.totaldayBalance);
+router.get('/todayCashBalance',verifyToken.checkSuperAdmin,donationController.todayCashBalance);
+router.get('/todayOnlineBalance',verifyToken.checkSuperAdmin,donationController.todayOnlineBalance);
 router.get('/totalDonation',verifyToken.checkSuperAdmin,donationController.getTotalDonation);
 router.get('/totalBalance',verifyToken.checkSuperAdmin,donationController.totalBalance);
 router.get('/totalCashBalance',verifyToken.checkSuperAdmin,donationController.totalCashBalance);

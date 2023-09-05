@@ -117,10 +117,65 @@ export const getDayDonation = async (req, res) => {
   }
 };
 
+export const getDayCashDonation = async (req, res) => {
+  try {
+    const result = await donationService.getDayCashDonation();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+export const getbyDayOnlineDonation = async (req, res) => {
+  try {
+    const result = await donationService.getbyDayOnlineDonation();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+export const getbyDaychequeDonation = async (req, res) => {
+  try {
+    const result = await donationService.getbyDaychequeDonation();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+
+export const  getbyDayPendingDonation = async (req, res) => {
+  try {
+    const result = await donationService.getbyDayPendingDonation();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
 
 export const totaldayBalance = async (req, res) => {
   try {
     const result = await donationService.totaldayBalance();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+export const todayCashBalance = async (req, res) => {
+  try {
+    const result = await donationService.todayCashBalance();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+export const todayOnlineBalance = async (req, res) => {
+  try {
+    const result = await donationService.todayOnlineBalance();
     return successResponse(req, res, result);
   } catch (error) {
     return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);

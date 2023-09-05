@@ -11,17 +11,56 @@ export const addDonation = async (donationDetail) => {
   try {
     const newDonation = await Donation.create(donationDetail);
     const donarDetail = await Donar.findOne({_id:newDonation.donarId})
-    let  phoneNumber = donarDetail.phoneNumbers[0].Phonenumber1.toString();
-    phoneNumber = "91"+phoneNumber;
-    console.log(phoneNumber)
-    console.log(typeof phoneNumber)
-    // const receipt = await whatsAppAPI(phoneNumber);
+    // let  phoneNumber = donarDetail.phoneNumbers[0].Phonenumber1.toString();
+    // phoneNumber = "91"+phoneNumber;
+    // console.log(phoneNumber)
+    // console.log(typeof phoneNumber)
+    // const receipt = await generateAndSendPDF(donationDetail, donorEmail);
     return newDonation;
   } catch (e) {
     console.log(e);
     throw new Error(e);
   }
 };
+
+
+
+
+// const generateAndSendPDF = async (donationDetail, donorEmail) => {
+//   try {
+//     // Generate the PDF
+//     const pdfDoc = await pdfLib.PDFDocument.create();
+//     const page = pdfDoc.addPage([600, 400]);
+//     const content = page.drawText(`Donation Details:\n\n${JSON.stringify(donationDetail)}`);
+    
+//     // Save the PDF to a buffer
+//     const pdfBytes = await pdfDoc.save();
+
+//     // Create a transporter for sending emails
+//     const transporter = nodemailer.createTransport({
+//       service: 'your_email_service',
+//       auth: {
+//         user: 'your_email@example.com',
+//         pass: 'your_email_password',
+//       },
+//     });
+
+//     // Configure email data
+//     const mailOptions = {
+//       from: 'your_email@example.com',
+//       to: donorEmail,
+//       subject: 'Donation Receipt',
+//       text: 'Thank you for your donation!',
+//       attachments: [
+//         {
+//           filename: 'donation_receipt.pdf',
+//           content: pdfBytes,
+//         },
+//       ],
+//     };
+
+//   }
+// }
 
 export const updateDonation = async (donationId, updatedData) => {
   try {
@@ -131,7 +170,72 @@ export const getDayDonation = async () => {
     const [year, month, day] = todayDate.split('T')[0].split("-");
     const fromDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
     const toDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999));
-    const data = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate } });
+    const data = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate },donationStatus:"Complete" });
+    const sum = data.reduce((total,donation)=>total+donation.donationAmount, 0)
+    console.log(sum);
+    return sum;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
+export const getDayCashDonation = async () => {
+  try {
+    const todayDate = new  Date().toISOString();
+    const [year, month, day] = todayDate.split('T')[0].split("-");
+    const fromDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
+    const toDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999));
+    const data = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate },donationMode:"Cash" });
+    const sum = data.reduce((total,donation)=>total+donation.donationAmount, 0)
+    console.log(sum);
+    return sum;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
+export const getbyDayOnlineDonation = async () => {
+  try {
+    const todayDate = new  Date().toISOString();
+    const [year, month, day] = todayDate.split('T')[0].split("-");
+    const fromDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
+    const toDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999));
+    const data = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate },donationMode:"Online" });
+    const sum = data.reduce((total,donation)=>total+donation.donationAmount, 0)
+    console.log(sum);
+    return sum;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+}
+
+export const  getbyDaychequeDonation = async () => {
+  try {
+    const todayDate = new  Date().toISOString();
+    const [year, month, day] = todayDate.split('T')[0].split("-");
+    const fromDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
+    const toDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999));
+    const data = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate },donationMode:"Cheque" });
+    const sum = data.reduce((total,donation)=>total+donation.donationAmount, 0)
+    console.log(sum);
+    return sum;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+}
+
+
+export const getbyDayPendingDonation = async () => {
+  try {
+    const todayDate = new  Date().toISOString();
+    const [year, month, day] = todayDate.split('T')[0].split("-");
+    const fromDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
+    const toDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999));
+    const data = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate },donationStatus:"Pending" });
     const sum = data.reduce((total,donation)=>total+donation.donationAmount, 0)
     console.log(sum);
     return sum;
@@ -147,7 +251,50 @@ export const totaldayBalance = async () => {
     const [year, month, day] = todayDate.split('T')[0].split("-");
     const fromDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
     const toDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999));
-    const donation = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate } });
+    const donation = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate },donationStatus:"Complete" });
+    const expenses = await ExpenseDetail.find({ expensesDate: { $gte: fromDate, $lte: toDate } });
+    const donationSum = donation.reduce((total,donation)=>total+donation.donationAmount, 0)
+    const expensesSum = expenses.reduce((total,donation)=>total+donation.expensesAmount, 0)
+    console.log("expensesSum"+expensesSum)
+    console.log("donationSum"+donationSum)
+    const totalBalance = donationSum-expensesSum
+    console.log(totalBalance);
+    return totalBalance;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
+
+export const todayCashBalance = async () => {
+  try {
+    const todayDate = new  Date().toISOString();
+    const [year, month, day] = todayDate.split('T')[0].split("-");
+    const fromDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
+    const toDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999));
+    const donation = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate },donationStatus:"Complete",donationMode: "cash" });
+    const expenses = await ExpenseDetail.find({ expensesDate: { $gte: fromDate, $lte: toDate } });
+    const donationSum = donation.reduce((total,donation)=>total+donation.donationAmount, 0)
+    const expensesSum = expenses.reduce((total,donation)=>total+donation.expensesAmount, 0)
+    console.log("expensesSum"+expensesSum)
+    console.log("donationSum"+donationSum)
+    const totalBalance = donationSum-expensesSum
+    console.log(totalBalance);
+    return totalBalance;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
+export const todayOnlineBalance = async () => {
+  try {
+    const todayDate = new  Date().toISOString();
+    const [year, month, day] = todayDate.split('T')[0].split("-");
+    const fromDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 0, 0, 0));
+    const toDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 23, 59, 59, 999));
+    const donation = await Donation.find({ donationDate: { $gte: fromDate, $lte: toDate },donationStatus:"Complete",donationMode: "online" });
     const expenses = await ExpenseDetail.find({ expensesDate: { $gte: fromDate, $lte: toDate } });
     const donationSum = donation.reduce((total,donation)=>total+donation.donationAmount, 0)
     const expensesSum = expenses.reduce((total,donation)=>total+donation.expensesAmount, 0)
@@ -165,7 +312,7 @@ export const totaldayBalance = async () => {
 
 export const getTotalDonation = async () => {
   try { 
-    const data = await Donation.find()
+    const data = await Donation.find({donationStatus:"Complete"})
     const sum = data.reduce((total,donation)=>total+donation.donationAmount, 0)
     console.log(sum);
     return sum;
@@ -177,7 +324,7 @@ export const getTotalDonation = async () => {
 
 export const totalBalance = async () => {
   try {
-    const donation = await Donation.find();
+    const donation = await Donation.find({donationStatus:"Complete"});
     const expenses = await ExpenseDetail.find();
     const donationSum = donation.reduce((total,donation)=>total+donation.donationAmount, 0)
     const expensesSum = expenses.reduce((total,donation)=>total+donation.expensesAmount, 0)
