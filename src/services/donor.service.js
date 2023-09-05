@@ -178,18 +178,18 @@ export const changeUserStatus = async (id, status, parentornot) => {
   }
 };
 
-export const getAllDonorsWithMembers = async (paginationOptions, filter, sortBy) => {
+export const getAllDonorsWithMembers = async (paginationOptions, donorfilter,familyfilter, sortBy) => {
   try {
     const { page, size } = paginationOptions;
 
-    const totalDonarCount = await Donar.countDocuments(filter);
-    const totalFamiliesCount = await Family.countDocuments(filter);
+    const totalDonarCount = await Donar.countDocuments(donorfilter);
+    const totalFamiliesCount = await Family.countDocuments(familyfilter);
     const totalDocuments = totalDonarCount + totalFamiliesCount;
     const totalPages = Math.ceil(totalDocuments / size);
     const skip = (page - 1) * size;
 
-    const donorsQuery = Donar.find(filter).sort(sortBy).skip(skip).populate("members");
-
+    const donorsQuery = Donar.find(donorfilter).sort(sortBy).skip(skip).populate("members");
+    console.log(JSON.stringify(donorfilter));
     // Check if size is provided and greater than 0, otherwise retrieve all documents
     if (size && size > 0) {
       donorsQuery.limit(size);
@@ -213,7 +213,8 @@ export const getAllDonorsWithMembers = async (paginationOptions, filter, sortBy)
       }
     }
 
-    const families = await Family.find(filter).sort(sortBy).skip(familySkip);
+    const families = await Family.find(familyfilter).sort(sortBy).skip(familySkip);
+    console.log(JSON.stringify(familyfilter));
 
     if (result.length + families.length > size) {
       const remainingSpace = size - result.length;
