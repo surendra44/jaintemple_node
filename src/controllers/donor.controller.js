@@ -54,7 +54,7 @@ export const getAllDonors = async (req, res) => {
 
   const paginationOptions = {
     page: parseInt(page) || 1,
-    size: parseInt(size) || 10,
+    size: parseInt(size) 
   };
 
   const filter = {
