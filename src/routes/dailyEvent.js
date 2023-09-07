@@ -11,7 +11,7 @@ import express from "express";
 const router = express.Router({ mergeParams: true });
 
 
-router.post('/addDailyevent',verifyToken.checkSuperAdmin,dailyEventController.addDailyEventCategory);
+router.post('/addDailyevent',dailyEventController.addDailyEventCategory);
 router.put('/updateDailyCategory/:id', verifyToken.checkSuperAdmin,dailyEventController.updateEventCategory);
 router.delete('/deleteDailyCategory/:id', verifyToken.checkSuperAdmin,dailyEventController.deleteCategory);
 router.get('/getDailyCategory/:id',  verifyToken.checkSuperAdmin,dailyEventController.getCategoryByID);

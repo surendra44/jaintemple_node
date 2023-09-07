@@ -9,6 +9,6 @@ const dailyCategoryEventSchema = new mongoose.Schema({
   }
 });
 
-const DaiailyCategoryEvent = mongoose.model('DaiailyCategoryEvent', dailyCategoryEventSchema);
+const DailyCategoryEvent = mongoose.model('DailyCategoryEvent', dailyCategoryEventSchema);
 
-module.exports = DaiailyCategoryEvent;
+module.exports = DailyCategoryEvent;

@@ -21,6 +21,9 @@ const donationSchema = new mongoose.Schema({
     ref: 'TempleDetail', // Reference to TempleDetail model
     required: true,
   },
+  receiptName: {
+    type: String,
+  },
   donationMode: {
     type: String,
     required: true,
