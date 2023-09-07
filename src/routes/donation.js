@@ -11,6 +11,7 @@ router.put('/updateDonation/:id',verifyToken.checkSuperAdmin,validate(donationVa
 router.delete('/deleteDonation/:id',verifyToken.checkSuperAdmin,validate(donationValidation.delteDonationById),donationController.deleteDonation);
 router.get('/getDonation/:id',verifyToken.checkSuperAdmin,validate(donationValidation.getDonationById),donationController.getDoationById);
 router.get('/getallDonation',verifyToken.checkSuperAdmin,donationController.getallDonation);
+router.post('/sendRecipt/:id',donationController.sendRecipt);
 router.get('/getallPendingDonation',verifyToken.checkSuperAdmin,donationController.getallPendingDonation);
 router.get('/todayDayDonation',verifyToken.checkSuperAdmin,donationController.getDayDonation);
 router.get('/todayCashDonation',verifyToken.checkSuperAdmin,donationController.getDayCashDonation);

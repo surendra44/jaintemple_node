@@ -1,7 +1,13 @@
 const Donation = require("../models/donationDetail");
 const Donar = require("../models/donar");
+const DailyCategoryEvent = require("../models/dailyCategory");
+const EventCategory = require("../models/eventCategory");
 const ExpenseDetail = require('../models/expenseDetail');
-const wbm = require('wbm');
+// const wbm = require('wbm');
+import pdf from 'html-pdf';
+import ejs from 'ejs';
+import path from 'path';
+import * as fs from 'fs-extra';
 import axios from "axios";
 import { ERROR_MESSAGE } from "../helpers/errorMessage";
 
@@ -10,18 +16,82 @@ import { ERROR_MESSAGE } from "../helpers/errorMessage";
 export const addDonation = async (donationDetail) => {
   try {
     const newDonation = await Donation.create(donationDetail);
-    const donarDetail = await Donar.findOne({_id:newDonation.donarId})
-    // let  phoneNumber = donarDetail.phoneNumbers[0].Phonenumber1.toString();
-    // phoneNumber = "91"+phoneNumber;
-    // console.log(phoneNumber)
-    // console.log(typeof phoneNumber)
-    // const receipt = await generateAndSendPDF(donationDetail, donorEmail);
-    return newDonation;
+    const result = await getDoationById(newDonation._id);
+    const receipt = await sendRecipt(result._id);
+    return result;
   } catch (e) {
     console.log(e);
     throw new Error(e);
   }
 };
+
+const getCategoryName = (categories, categoryId) => {
+  console.log(categories, categoryId);
+  const daat =  categories.find((category) => category._id === categoryId);
+  console.log(daat);
+}
+
+export const sendRecipt = async (donationId) => {
+  try {
+    let data = [];
+    const donationDetail = await Donation.findById({ _id: donationId }).populate("templeId").populate("donarId");
+    const dailyCategories = await DailyCategoryEvent.find();
+    const categories = await EventCategory.find();
+    if (donationDetail.eventId === null) {
+      const transactions = donationDetail.dailyEvent;
+      data = transactions.map((transaction) => ({ name: getCategoryName(dailyCategories, transaction.dailyEventCategory), amount: transaction.donateEventAmount }))
+    } else {
+      data = [{ amount: donationDetail.donationAmount, name: getCategoryName(categories, donationDetail.eventId)}];
+    }
+    const templeAddress = [
+      donationDetail.templeId.address.line_1,
+      donationDetail.templeId.address.city,
+      donationDetail.templeId.address.pincode,
+      donationDetail.templeId.address.country
+    ].filter(Boolean).join(' ');
+
+    const dynamicData = {
+      templeName: donationDetail.templeId.name,
+      templeAddress: templeAddress,
+      donorName: donationDetail.donarId.firstName,
+      donarAmount: donationDetail.donationAmount,
+      mode: donationDetail.donationMode,
+      data
+    }
+    const { pdfBuffer } = await generatePDFReceipt(dynamicData); // Destructure the result
+    return  dynamicData ;
+  } catch (e) {
+    console.error(e);
+    res.status(500).send('Error processing donation');
+  }
+};
+
+const generatePDFReceipt = async (dynamicData) => {
+  try {
+    const html = await ejs.renderFile(path.join(__dirname, '../template/billing.ejs'), { data: dynamicData });
+
+    const pdfBuffer = await new Promise((resolve, reject) => {
+      pdf.create(html).toBuffer((err, buffer) => {
+        if (err) {
+          console.error(err);
+          reject('Error generating PDF');
+        } else {
+          resolve(buffer);
+        }
+      });
+    });
+
+    // Save the PDF to a file
+    fs.writeFileSync(path.join(__dirname, '../template/donation_receipt.pdf'), pdfBuffer);
+
+    return { dynamicData, pdfBuffer };
+  } catch (e) {
+    console.error(e);
+    throw new Error('Error generating or saving PDF');
+  }
+};
+
+
 
 
 

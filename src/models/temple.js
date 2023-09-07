@@ -11,6 +11,7 @@ const templeDetailSchema = new mongoose.Schema({
         Phonenumber2: String
     }
 ],
+
   address: {
     line_1: String,
     line_2: String,

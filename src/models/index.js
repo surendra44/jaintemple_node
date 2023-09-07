@@ -4,3 +4,4 @@ module.exports.Donar = require('./donar');
 module.exports.Family = require('./family');
 module.exports.ExpensesCategory = require('./expenseCategory');
 module.exports.EventDetail = require('./eventDetail');
+module.exports.DailyEventCategory = require('./dailyCategory');

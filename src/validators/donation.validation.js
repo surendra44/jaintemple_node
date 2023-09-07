@@ -14,6 +14,7 @@ export const createDonation = {
     donationDetail: Joi.string().allow(""),
     donationAccNumber: Joi.string().allow(""),
     donateToAccNumber: Joi.string().allow(""),
+    receiptName: Joi.string().allow(""),
     donationDate: Joi.date().iso(),
     dailyEvent: Joi.array().items(
       Joi.object().keys({
@@ -39,6 +40,7 @@ export const updateDonation = {
     donationDetail: Joi.string().allow(""),
     donationAccNumber: Joi.string().allow(""),
     donateToAccNumber: Joi.string().allow(""),
+    receiptName: Joi.string().allow(""),
     donationDate: Joi.date().iso(),
     dailyEvent: Joi.array().items(
       Joi.object().keys({

@@ -16,6 +16,15 @@ export const addDonation = async (req, res) => {
     }
 };
 
+export const sendRecipt = async (req, res) => {
+  const donationId= req.params.id;
+  try {
+    const result = await donationService.sendRecipt(donationId);
+    return successResponse(req, res, result);
+  } catch (error) {
+      return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+    }
+};
 
 export const updateDonation = async (req, res) => {
     try{
