@@ -3,6 +3,7 @@ const Donar = require("../models/donar");
 const DailyCategoryEvent = require("../models/dailyCategory");
 const EventCategory = require("../models/eventCategory");
 const ExpenseDetail = require('../models/expenseDetail');
+const EventDetail = require('../models/eventDetail');
 // const wbm = require('wbm');
 import pdf from 'html-pdf';
 import ejs from 'ejs';
@@ -17,7 +18,7 @@ export const addDonation = async (donationDetail) => {
   try {
     const newDonation = await Donation.create(donationDetail);
     const result = await getDoationById(newDonation._id);
-    const receipt = await sendRecipt(result._id);
+    // const receipt = await sendRecipt(result._id);
     return result;
   } catch (e) {
     console.log(e);
@@ -27,21 +28,30 @@ export const addDonation = async (donationDetail) => {
 
 const getCategoryName = (categories, categoryId) => {
   console.log(categories, categoryId);
-  const daat =  categories.find((category) => category._id === categoryId);
-  console.log(daat);
+  return  categories.find((category) => category._id.toString() === categoryId.toString()).name;
+  
 }
+
+
 
 export const sendRecipt = async (donationId) => {
   try {
     let data = [];
     const donationDetail = await Donation.findById({ _id: donationId }).populate("templeId").populate("donarId");
+    const eventId =donationDetail.eventId ;
+    console.log(eventId);
     const dailyCategories = await DailyCategoryEvent.find();
+    const events = await EventDetail.find();
+    console.log(events);
     const categories = await EventCategory.find();
+    let eventName = donationDetail.eventId === null ? "Daily" : events.find((event) => event._id.toString() === eventId.toString()).eventName ;
+    
+
     if (donationDetail.eventId === null) {
       const transactions = donationDetail.dailyEvent;
       data = transactions.map((transaction) => ({ name: getCategoryName(dailyCategories, transaction.dailyEventCategory), amount: transaction.donateEventAmount }))
     } else {
-      data = [{ amount: donationDetail.donationAmount, name: getCategoryName(categories, donationDetail.eventId)}];
+      data = [{ amount: donationDetail.donationAmount, name:donationDetail.eventCategoryId ? getCategoryName(categories, donationDetail.eventCategoryId):''}];
     }
     const templeAddress = [
       donationDetail.templeId.address.line_1,
@@ -56,6 +66,7 @@ export const sendRecipt = async (donationId) => {
       donorName: donationDetail.donarId.firstName,
       donarAmount: donationDetail.donationAmount,
       mode: donationDetail.donationMode,
+      eventName:eventName,
       data
     }
     const { pdfBuffer } = await generatePDFReceipt(dynamicData); // Destructure the result
