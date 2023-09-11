@@ -12,11 +12,11 @@ const router = express.Router({ mergeParams: true });
 
 
 router.post('/templeRegister',upload.any(),verifyToken.checkSuperAdmin,validate(templeValidate.templeRegister),templeController.registerTemple);
-router.get("/getTempleById/:id",verifyToken.checkSuperAdmin,validate(templeValidate.getTempleById),templeController.getTempleById);    
+router.get("/getTempleById/:id",validate(templeValidate.getTempleById),templeController.getTempleById);    
 router.get("/getTempleall",verifyToken.checkSuperAdmin, templeController.getAllTemples);    
-router.put('/updateTemple/:id',upload.any(),templeController.updateTemple);
+router.put('/updateTemple/:id',upload.any(),verifyToken.checkSuperAdmin,templeController.updateTemple);
 router.delete('/deleteTemple/:id',verifyToken.checkSuperAdmin,validate(templeValidate.deleteTemple),templeController.deleteTemple);
 
-// fff
+
 
 export default router;
