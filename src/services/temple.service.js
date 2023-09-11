@@ -6,6 +6,7 @@ const TempleDetail = require('../models/temple');
 
 export const addtemple = async (templeData) =>{
     try {
+      console.log(templeData);
       const newTemple = await TempleDetail.create(templeData);
       return newTemple;
     } catch (e) {

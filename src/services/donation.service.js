@@ -24,6 +24,7 @@ export const addDonation = async (donationDetail) => {
     console.log(e);
     throw new Error(e);
   }
+  
 };
 
 const getCategoryName = (categories, categoryId) => {
