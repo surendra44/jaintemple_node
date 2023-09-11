@@ -11,6 +11,7 @@ export const registerTemple = async (req, res) => {
     console.log(files);
     const templeData = req.body;
    
+    
     console.log(templeData);
     const homePhotoFile = files.find(file => file.fieldname === 'homepageInfo[homePhoto]');
     if (homePhotoFile) {

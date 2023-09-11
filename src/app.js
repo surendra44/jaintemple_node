@@ -20,6 +20,7 @@ export const app = express();
 
 app.set('view engine', 'ejs')
 
+app.use('/uploads', express.static('uploads'));
 // Assign random UUID to each incoming request
 app.use(httpContext.middleware);
 app.use((req, res, next) => {
