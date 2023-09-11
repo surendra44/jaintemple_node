@@ -17,6 +17,6 @@ router.get("/getTempleall",verifyToken.checkSuperAdmin, templeController.getAllT
 router.put('/updateTemple/:id',upload.any(),templeController.updateTemple);
 router.delete('/deleteTemple/:id',verifyToken.checkSuperAdmin,validate(templeValidate.deleteTemple),templeController.deleteTemple);
 
-
+// fff
 
 export default router;
