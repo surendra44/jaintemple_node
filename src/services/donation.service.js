@@ -18,7 +18,7 @@ export const addDonation = async (donationDetail) => {
   try {
     const newDonation = await Donation.create(donationDetail);
     const result = await getDoationById(newDonation._id);
-    const receipt = await sendRecipt(result._id);
+    // const receipt = await sendRecipt(result._id);
     return result;
   } catch (e) {
     console.log(e);
@@ -58,7 +58,7 @@ export const sendRecipt = async (donationId) => {
       donationDetail.templeId.address.line_1,
       donationDetail.templeId.address.city,
       donationDetail.templeId.address.pincode,
-      donationDetail.templeId.address.country
+      donationDetail.templeId.address.country,
     ].filter(Boolean).join(' ');
 
     const dynamicData = {
@@ -68,6 +68,7 @@ export const sendRecipt = async (donationId) => {
       donarAmount: donationDetail.donationAmount,
       mode: donationDetail.donationMode,
       eventName:eventName,
+      receiptName:donationDetail.receiptName,
       data
     }
     const { pdfBuffer } = await generatePDFReceipt(dynamicData); // Destructure the result
@@ -427,6 +428,79 @@ export const totalCashDonation = async () => {
     throw new Error(e);
   }
 };
+
+export const totalbyEventDonation = async (eventId) => {
+  try { 
+    const data = await Donation.find({ donationStatus: "Complete", donationMode: "Cash", eventId: eventId });
+    const sum = data.reduce((total, donation) => total + donation.donationAmount, 0);
+    console.log(sum);
+    return sum;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
+export const  totalbydailyEventCategory = async (eventId) => {
+  try { 
+    const data = await Donation.find({ donationStatus: "Complete" });
+    let totalAmount = 0;
+    console.log(data);
+    for (const donation of data) {
+      if (donation.dailyEvent && Array.isArray(donation.dailyEvent)) {
+        console.log("Donation with dailyEvent found:", donation);
+        const matchingEvents = donation.dailyEvent.filter(
+          (dailyEvent) => dailyEvent.dailyEventCategory.toString() === eventId.toString()
+        );
+        console.log("Matching Events:", matchingEvents);
+        if (matchingEvents.length > 0) {
+          const eventTotal = matchingEvents.reduce(
+            (sum, dailyEvent) => sum + dailyEvent.donateEventAmount,
+            0
+          );
+          console.log(`Event Total for Event ID ${eventId}: ${eventTotal}`);
+          totalAmount += eventTotal;
+        }
+        else{
+          console.log("=======")
+          let result = await totalbyEventCategory(eventId)
+          return result;
+        }
+      }
+    }
+    console.log(`Total Cash Donation for Event ID ${eventId}: ${totalAmount}`);
+    return totalAmount;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
+
+export const totalbyEventCategory = async (eventCategoryId) => {
+  try {
+    const data = await Donation.find({ donationStatus: "Complete" });
+    let totalAmount = 0;
+    console.log("DIIIIII++++")
+    for (const donation of data) {
+      console.log(donation);
+      if (
+        donation.eventCategoryId &&
+        donation.eventCategoryId.toString() === eventCategoryId.toString()
+      ) {
+        console.log("DIIIIII++++")
+        totalAmount += donation.donationAmount;
+      }
+    }
+
+    console.log(`Total Cash Donation for Event Category ID ${eventCategoryId}: ${totalAmount}`);
+    return totalAmount;
+  } catch (e) {
+    console.log(e);
+    throw new Error(e);
+  }
+};
+
 
 export const totalBalance = async () => {
   try {
