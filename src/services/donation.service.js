@@ -18,7 +18,7 @@ export const addDonation = async (donationDetail) => {
   try {
     const newDonation = await Donation.create(donationDetail);
     const result = await getDoationById(newDonation._id);
-    // const receipt = await sendRecipt(result._id);
+    const receipt = await sendRecipt(result._id);
     return result;
   } catch (e) {
     console.log(e);
@@ -40,7 +40,7 @@ export const sendRecipt = async (donationId) => {
     let data = [];
     const donationDetail = await Donation.findById({ _id: donationId }).populate("templeId").populate("donarId");
     const eventId =donationDetail.eventId ;
-    console.log(eventId);
+    console.log(eventId,"===========================");
     const dailyCategories = await DailyCategoryEvent.find();
     const events = await EventDetail.find();
     console.log(events);

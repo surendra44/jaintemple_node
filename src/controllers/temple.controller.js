@@ -3,6 +3,8 @@ const upload = require('../middleware/uploadFile')
 import { successResponse, errorResponse } from "../helpers";
 import { filter } from "lodash";
 const { templeService } = require('../services');
+const fs = require('fs');
+const path = require('path');
 
 // Controller to handle temple registration
 export const registerTemple = async (req, res) => {
@@ -50,33 +52,74 @@ export const registerTemple = async (req, res) => {
 
 
 
+
+const deleteFile = async (filePath) => {
+  console.log("diiii============")
+  const fullPath = path.join(__dirname, '..', '..', 'uploads', filePath); // Adjust the path to match your project structure
+  console.log(`fullPath ${fullPath}`);
+  if (fs.existsSync(fullPath)) {
+    fs.unlinkSync(fullPath);
+    console.log(`Deleted file: ${fullPath}`);
+  } else {
+    console.log(`File not found: ${fullPath}`);
+  }
+}
+
 export const updateTemple = async (req, res) => {
   const templeId = req.params.id;
   const files = req.files;
   const templeData = req.body;
+  const existingTemple = await templeService.getTempleById(templeId);
+  console.log(templeId);
   if (!templeData.barcode) {
     templeData.barcode = {};
   } 
   console.log(files);
-  console.log(templeData);
+  console.log(JSON.stringify(templeData));
   try {
     if (!templeData.homepageInfo) {
       templeData.homepageInfo = {};
     }
     const homePhotoFile = files.find(file => file.fieldname === 'homepageInfo[homePhoto]');
     if (homePhotoFile) {
+      console.log(existingTemple.homepageInfo.homePhoto);
+      deleteFile(existingTemple.homepageInfo.homePhoto);
       templeData.homepageInfo.homePhoto = homePhotoFile.filename;
     }
+
     if (!templeData.mediaPageInfo) {
       templeData.mediaPageInfo = [];
    }
     const mediaphoto = files.filter(file => file.fieldname.startsWith('mediaPageInfo')).map(file => file.filename);
-    if (mediaphoto && mediaphoto.length > 0) {
-      templeData.mediaPageInfo = mediaphoto.map((data, index) => ({
-        ...templeData.mediaPageInfo[index], // Preserve existing properties if they exist
-        mediaPhoto: data,
-      }));
+    const deletedMediophoto = files.filter(file => file.fieldname.startsWith('mediaPageInfo')).map(file => file.fieldname);
+    if (deletedMediophoto && deletedMediophoto.length > 0) {
+      for (const fieldname of deletedMediophoto) {
+        const index = Number(fieldname.match(/\d+/)[0]);
+          console.log(index);
+        if (
+          existingTemple.mediaPageInfo &&
+          Array.isArray(existingTemple.mediaPageInfo) &&
+          existingTemple.mediaPageInfo.length > index
+        ) {
+          // Check if the index exists in mediaPageInfo
+          if (index >= 0) {
+            const oldMediaPhoto = existingTemple.mediaPageInfo[index].mediaPhoto;
+            const newMediaPhoto = templeData.mediaPageInfo[index];
+            if (oldMediaPhoto) {
+              console.log(oldMediaPhoto,"oldmedia");
+              // Delete the old media photo
+              deleteFile(oldMediaPhoto);
+            }
+            // Update with the new media photo
+            templeData.mediaPageInfo = mediaphoto.map((data, index) => ({newMediaPhoto,  mediaPhoto: data}));
+          }
+        }
+      }
     }
+    // if (mediaphoto && mediaphoto.length > 0) {
+    //   console.log(mediaphoto,"mediphoto");
+    //   templeData.mediaPageInfo = mediaphoto.map((data, index) => ({...templeData.mediaPageInfo[index],  mediaPhoto: data}));
+    // }
 
   if (!templeData.commiteMemberInfo) {
     templeData.commiteMemberInfo = [];
