@@ -218,6 +218,26 @@ export const  totalCashDonation = async (req, res) => {
   }
 };
 
+export const  totalbyEventDonation = async (req, res) => {
+  try {
+    const result = await donationService.totalbyEventDonation(req.params.id);
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+export const totalbyEventCategory = async (req, res) => {
+  try {
+    const eventId = req.params.id;
+    const result = await donationService.totalbydailyEventCategory(eventId);
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+
 export const totalBalance = async (req, res) => {
   try {
     const result = await donationService.totalBalance();
