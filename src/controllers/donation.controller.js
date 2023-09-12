@@ -237,6 +237,44 @@ export const totalbyEventCategory = async (req, res) => {
   }
 };
 
+export const totalByAllDailyEventCategories = async (req, res) => {
+  try {
+    const { page, size, search,sort } = req.query;
+    
+      const paginationOptions = {
+        page: parseInt(page) || 1,
+        size: parseInt(size) || 10,
+      };
+    
+      const filter = {
+        $and: [
+          { donationMode: { $regex: search || "", $options: "i" } },
+          { donationStatus: "Complete" },
+        ],
+      };
+ 
+      const sortingOptions = sort ? sort.split(",") : ["donationDate", "asc"];
+      const sortBy = { [sortingOptions[0]]: sortingOptions[1] };
+    const result = await donationService.totalByAllDailyEventCategories(paginationOptions,filter,sortBy);
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+
+
+export const totalByEventCategories = async (req, res) => {
+  try {
+    const result = await donationService.totalByAllEventCategories();
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+
+
 
 export const totalBalance = async (req, res) => {
   try {
