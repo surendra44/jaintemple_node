@@ -11,6 +11,7 @@ import path from 'path';
 import * as fs from 'fs-extra';
 import axios from "axios";
 import { ERROR_MESSAGE } from "../helpers/errorMessage";
+import { dailyEventService } from '.';
 
 
 
@@ -441,7 +442,7 @@ export const totalbyEventDonation = async (eventId) => {
   }
 };
 
-export const  totalbydailyEventCategory = async (eventId) => {
+export const  totalByDailyEventCategory  = async (eventId) => {
   try { 
     const data = await Donation.find({ donationStatus: "Complete" });
     let totalAmount = 0;
@@ -478,8 +479,7 @@ export const  totalbydailyEventCategory = async (eventId) => {
 };
 
 
-
-export const totalByAllDailyEventCategories = async (paginationOptions,filter,sortBy) => {
+export const totalByAllDailyEventCategories = async (paginationOptions, filter, sortBy) => {
   try {
     const { page, size } = paginationOptions;
 
@@ -487,12 +487,12 @@ export const totalByAllDailyEventCategories = async (paginationOptions,filter,so
     const dailyEventCategories = await DailyCategoryEvent.find({}, "name");
 
     const totalDocuments = dailyEventCategories.length;
-    const totalPages = Math.ceil(totalDocuments / size);
-    const skip = (page - 1) * size;
+    const totalPages = Math.ceil(totalDocuments / (size || totalDocuments)); // If size is not provided or invalid, return all data
+    const skip = (page - 1) * (size || totalDocuments); // If size is not provided or invalid, skip 0 documents
 
     // Paginate the daily event categories
     const paginatedCategories = dailyEventCategories
-      .slice(skip, skip + size)
+      .slice(skip, skip + (size || totalDocuments))
       .map(async (category) => {
         // Find donations for the current category
         const donationsForCategory = await Donation.find({
@@ -530,7 +530,7 @@ export const totalByAllDailyEventCategories = async (paginationOptions,filter,so
 
     return {
       page,
-      size,
+      size: size || totalDocuments, // If size is not provided or invalid, return all data
       data: result,
       previousPage: page > 1 ? page - 1 : null,
       nextPage: page < totalPages ? page + 1 : null,
@@ -542,122 +542,86 @@ export const totalByAllDailyEventCategories = async (paginationOptions,filter,so
   }
 };
 
-export const totalByAllEventCategories = async (req, res) => {
+
+export const totalByAllEventCategories = async (paginationOptions, filter, sortBy) => {
   try {
-    const { page, size, search, sort } = req.query;
+    const { page, size } = paginationOptions;
 
-    const paginationOptions = {
-      page: parseInt(page) || 1,
-      size: parseInt(size) || 10,
+    // Find all event categories
+    const eventCategories = await EventCategory.find({}, "name");
+
+    const totalDocuments = eventCategories.length;
+    const totalPages = Math.ceil(totalDocuments / (size || totalDocuments)); // If size is not provided or invalid, return all data
+    const skip = (page - 1) * (size || totalDocuments); // If size is not provided or invalid, skip 0 documents
+
+    // Paginate the event categories
+    const paginatedCategories = eventCategories
+      .slice(skip, skip + (size || totalDocuments))
+      .map(async (category) => {
+        try {
+          // Find donations for the current event category
+          const donationsForCategory = await Donation.find({
+            donationStatus: "Complete", // Corrected spelling
+            eventCategoryId: category._id,
+          });
+
+          // Calculate the total donation amount for the category
+          const totalAmount = donationsForCategory.reduce(
+            (total, donation) => total + donation.donationAmount,
+            0
+          );
+
+          return {
+            name: category.name,
+            totalamount: totalAmount,
+          };
+        } catch (error) {
+          console.error(`Error while processing category ${category.name}: ${error.message}`);
+          return {
+            name: category.name,
+            totalamount: 0, // Set total to 0 for categories with errors
+          };
+        }
+      });
+
+    // Wait for all promises to resolve
+    const result = await Promise.all(paginatedCategories);
+
+    console.log("Total Amounts for Event Categories:");
+    console.log(result);
+
+    return {
+      page,
+      size: size || totalDocuments, // If size is not provided or invalid, return all data
+      data: result,
+      previousPage: page > 1 ? page - 1 : null,
+      nextPage: page < totalPages ? page + 1 : null,
+      totalDocuments,
     };
-
-    const filter = {
-      donationStatus: "Complete",
-    };
-
-    // Add a filter for the eventCategoryId name
-    if (search) {
-      filter["eventCategoryId.name"] = { $regex: search, $options: "i" };
-    }
-
-    const sortingOptions = sort ? sort.split(",") : ["donationDate", "asc"];
-    const sortBy = { [sortingOptions[0]]: sortingOptions[1] };
-
-    // Use the $lookup aggregation stage to join Donation with EventCategory
-    const result = await Donation.aggregate([
-      {
-        $match: filter,
-      },
-      {
-        $lookup: {
-          from: "eventcategories", // Replace with the actual collection name
-          localField: "eventCategoryId",
-          foreignField: "_id",
-          as: "eventCategoryId",
-        },
-      },
-      {
-        $unwind: "$eventCategoryId",
-      },
-      {
-        $group: {
-          _id: "$eventCategoryId.name",
-          totalamount: { $sum: "$donationAmount" },
-        },
-      },
-    ]);
-
-    return successResponse(req, res, result);
-  } catch (error) {
-    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  } catch (e) {
+    console.error(`Error: ${e.message}`);
+    throw new Error(e);
   }
 };
 
 
 
-
-
-
-
-export const totalbyEventCategory = async () => {
+export const totalbyEventCategory = async (eventCategoryId) => {
   try {
-    const { page, size, sort } = req.query;
-
-    const paginationOptions = {
-      page: parseInt(page) || 1,
-      size: parseInt(size) || 10,
-    };
-
-    const filter = {
+    const data = await Donation.find({
       donationStatus: "Complete",
-    };
-
-    const sortingOptions = sort ? sort.split(",") : ["donationDate", "asc"];
-    const sortBy = { [sortingOptions[0]]: sortingOptions[1] };
-
-    const totalDocuments = await Donation.countDocuments(filter);
-    const totalPages = Math.ceil(totalDocuments / paginationOptions.size);
-    const skip = (paginationOptions.page - 1) * paginationOptions.size;
-
-    // Use the $lookup aggregation stage to join Donation with EventCategory
-    const result = await Donation.aggregate([
-      {
-        $match: filter,
-      },
-      {
-        $lookup: {
-          from: "eventcategories", // Replace with the actual collection name
-          localField: "eventCategoryId",
-          foreignField: "_id",
-          as: "eventCategoryId",
-        },
-      },
-      {
-        $unwind: "$eventCategoryId",
-      },
-      {
-        $group: {
-          _id: "$eventCategoryId.name",
-          totalamount: { $sum: "$donationAmount" },
-        },
-      },
-      {
-        $skip: skip,
-      },
-      {
-        $limit: paginationOptions.size,
-      },
-    ]);
-
-    return successResponse(req, res, {
-      page: paginationOptions.page,
-      size: paginationOptions.size,
-      data: result,
-      previousPage: paginationOptions.page > 1 ? paginationOptions.page - 1 : null,
-      nextPage: paginationOptions.page < totalPages ? paginationOptions.page + 1 : null,
-      totalDocuments,
+      eventCategoryId: eventCategoryId,
     });
-  }  catch (e) {
+
+    let totalAmount = 0;
+
+    for (const donation of data) {
+      totalAmount += donation.donationAmount;
+    }
+
+    console.log(`Total Cash Donation for Event Category ID ${eventCategoryId}: ${totalAmount}`);
+    return totalAmount;
+  } catch (e) {
     console.log(e);
     throw new Error(e);
   }
