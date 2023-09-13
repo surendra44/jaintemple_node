@@ -98,7 +98,7 @@ export const getallPendingDonation = async(req, res)=> {
     const { page, size, search,sort } = req.query;
     const paginationOptions = {
       page: parseInt(page) || 1,
-      size: parseInt(size) || 10,
+      size: parseInt(size),
     };
   
     const filter = {
@@ -227,10 +227,20 @@ export const  totalbyEventDonation = async (req, res) => {
   }
 };
 
-export const totalbyEventCategory = async (req, res) => {
+export const totalbyDailyEventCategory = async (req, res) => {
   try {
     const eventId = req.params.id;
-    const result = await donationService.totalbydailyEventCategory(eventId);
+    const result = await donationService.totalByDailyEventCategory(eventId);
+    return successResponse(req, res, result);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
+export const totalbyEventCategory  = async (req, res) => {
+  try {
+    const eventId = req.params.id;
+    const result = await donationService.totalbyEventCategory(eventId);
     return successResponse(req, res, result);
   } catch (error) {
     return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
@@ -243,17 +253,17 @@ export const totalByAllDailyEventCategories = async (req, res) => {
     
       const paginationOptions = {
         page: parseInt(page) || 1,
-        size: parseInt(size) || 10,
+        size: parseInt(size) ,
       };
     
       const filter = {
         $and: [
-          { donationMode: { $regex: search || "", $options: "i" } },
+          { name: { $regex: search || "", $options: "i" } },
           { donationStatus: "Complete" },
         ],
       };
  
-      const sortingOptions = sort ? sort.split(",") : ["donationDate", "asc"];
+      const sortingOptions = sort ? sort.split(",") : ["name", "asc"];
       const sortBy = { [sortingOptions[0]]: sortingOptions[1] };
     const result = await donationService.totalByAllDailyEventCategories(paginationOptions,filter,sortBy);
     return successResponse(req, res, result);
@@ -266,7 +276,23 @@ export const totalByAllDailyEventCategories = async (req, res) => {
 
 export const totalByEventCategories = async (req, res) => {
   try {
-    const result = await donationService.totalByAllEventCategories();
+    const { page, size, search,sort } = req.query;
+    
+      const paginationOptions = {
+        page: parseInt(page) || 1,
+        size: parseInt(size) ,
+      };
+    
+      const filter = {
+        $and: [
+          { name: { $regex: search || "", $options: "i" } },
+          { donationStatus: "Complete" },
+        ],
+      };
+ 
+      const sortingOptions = sort ? sort.split(",") : ["name", "asc"];
+      const sortBy = { [sortingOptions[0]]: sortingOptions[1] };
+    const result = await donationService.totalByAllEventCategories(paginationOptions,filter,sortBy);
     return successResponse(req, res, result);
   } catch (error) {
     return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);

@@ -25,6 +25,7 @@ router.get('/totalDonation',verifyToken.checkSuperAdmin,donationController.getTo
 router.get('/totalOnlineDonation',verifyToken.checkSuperAdmin,donationController.totalOnlineDonation);
 router.get('/totalCashDonation',verifyToken.checkSuperAdmin,donationController.totalCashDonation);
 router.get('/totalbyEventDonation/:id',verifyToken.checkSuperAdmin,donationController.totalbyEventDonation);
+router.get('/totalbyDailyEventCategory/:id',verifyToken.checkSuperAdmin,donationController.totalbyDailyEventCategory);
 router.get('/totalbyEventCategory/:id',verifyToken.checkSuperAdmin,donationController.totalbyEventCategory);
 router.get('/totalByAllDailyEventCategories',verifyToken.checkSuperAdmin,donationController.totalByAllDailyEventCategories);
 router.get('/totalEventCategories',verifyToken.checkSuperAdmin,donationController.totalByEventCategories);
