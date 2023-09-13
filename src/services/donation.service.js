@@ -484,7 +484,7 @@ export const totalByAllDailyEventCategories = async (paginationOptions, filter, 
     const { page, size } = paginationOptions;
 
     // Find all daily event categories
-    const dailyEventCategories = await DailyCategoryEvent.find({}, "name");
+    const dailyEventCategories = await DailyCategoryEvent.find(filter);
 
     const totalDocuments = dailyEventCategories.length;
     const totalPages = Math.ceil(totalDocuments / (size || totalDocuments)); // If size is not provided or invalid, return all data
@@ -495,10 +495,7 @@ export const totalByAllDailyEventCategories = async (paginationOptions, filter, 
       .slice(skip, skip + (size || totalDocuments))
       .map(async (category) => {
         // Find donations for the current category
-        const donationsForCategory = await Donation.find({
-          donationStatus: "Complete",
-          "dailyEvent.dailyEventCategory": category._id,
-        });
+        const donationsForCategory = await Donation.find(filter);
 
         // Calculate the total donation amount for the category
         const totalAmount = donationsForCategory.reduce(
@@ -536,7 +533,7 @@ export const totalByAllDailyEventCategories = async (paginationOptions, filter, 
       nextPage: page < totalPages ? page + 1 : null,
       totalDocuments,
     };
-  } catch (e) {
+   } catch (e) {
     console.log(e);
     throw new Error(e);
   }
@@ -548,7 +545,7 @@ export const totalByAllEventCategories = async (paginationOptions, filter, sortB
     const { page, size } = paginationOptions;
 
     // Find all event categories
-    const eventCategories = await EventCategory.find({}, "name");
+    const eventCategories = await EventCategory.find(filter);
 
     const totalDocuments = eventCategories.length;
     const totalPages = Math.ceil(totalDocuments / (size || totalDocuments)); // If size is not provided or invalid, return all data
@@ -560,10 +557,7 @@ export const totalByAllEventCategories = async (paginationOptions, filter, sortB
       .map(async (category) => {
         try {
           // Find donations for the current event category
-          const donationsForCategory = await Donation.find({
-            donationStatus: "Complete", // Corrected spelling
-            eventCategoryId: category._id,
-          });
+          const donationsForCategory = await Donation.find(filter);
 
           // Calculate the total donation amount for the category
           const totalAmount = donationsForCategory.reduce(
