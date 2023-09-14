@@ -65,6 +65,10 @@ export const templeRegister =  {
             barcode1: Joi.string().allow(""),
             barcode2: Joi.string().allow(""),
         }),
+        artiTime: Joi.object({
+            normalTiming: Joi.string().allow(""),
+            eventTiming: Joi.string().allow(""),
+        }),
         maharajJiInfo: Joi.array().items(
             Joi.object({
             maharajName: Joi.string().allow(""),

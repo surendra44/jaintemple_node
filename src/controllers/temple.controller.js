@@ -39,6 +39,17 @@ export const registerTemple = async (req, res) => {
       templeData.barcode.barcode2 = barcodephoto2.filename;
     }
 
+    const normalTiming = files.find(file => file.fieldname === 'artiTime[normalTiming]');
+    const eventTiming = files.find(file => file.fieldname === 'artiTime[eventTiming]');
+    templeData.artiTime = {};
+    if (normalTiming) {
+      templeData.artiTime.normalTiming = normalTiming.filename;
+    }
+    if (barcodephoto2) {
+      templeData.artiTime.eventTiming = eventTiming.filename;
+    }
+
+
     const maharajJiphoto =  files.filter((file)=>file.fieldname.startsWith('maharajJiInfo')).map((e)=>e.filename)
     if (maharajJiphoto) {
       maharajJiphoto.map((data,index)=>templeData.maharajJiInfo[index].maharajPhoto= data )
@@ -77,60 +88,48 @@ export const updateTemple = async (req, res) => {
   console.log(files);
   console.log(JSON.stringify(templeData));
   try {
-    if (!templeData.homepageInfo) {
+    if (templeData.homepageInfo) {
       templeData.homepageInfo = {};
+      const homePhotoFile = files.find(file => file.fieldname === 'homepageInfo[homePhoto]');
+      if (homePhotoFile) {
+        console.log(existingTemple.homepageInfo.homePhoto);
+        deleteFile(existingTemple.homepageInfo.homePhoto);
+        templeData.homepageInfo.homePhoto = homePhotoFile.filename;
+      }
     }
-    const homePhotoFile = files.find(file => file.fieldname === 'homepageInfo[homePhoto]');
-    if (homePhotoFile) {
-      console.log(existingTemple.homepageInfo.homePhoto);
-      deleteFile(existingTemple.homepageInfo.homePhoto);
-      templeData.homepageInfo.homePhoto = homePhotoFile.filename;
-    }
+   
 
     if (!templeData.mediaPageInfo) {
       templeData.mediaPageInfo = [];
-   }
-    const mediaphoto = files.filter(file => file.fieldname.startsWith('mediaPageInfo')).map(file => file.filename);
-    const deletedMediophoto = files.filter(file => file.fieldname.startsWith('mediaPageInfo')).map(file => file.fieldname);
-    if (deletedMediophoto && deletedMediophoto.length > 0) {
-      for (const fieldname of deletedMediophoto) {
-        const index = Number(fieldname.match(/\d+/)[0]);
-          console.log(index);
-        if (
-          existingTemple.mediaPageInfo &&
-          Array.isArray(existingTemple.mediaPageInfo) &&
-          existingTemple.mediaPageInfo.length > index
-        ) {
-          // Check if the index exists in mediaPageInfo
-          if (index >= 0) {
-            const oldMediaPhoto = existingTemple.mediaPageInfo[index].mediaPhoto;
-            const newMediaPhoto = templeData.mediaPageInfo[index];
-            if (oldMediaPhoto) {
-              console.log(oldMediaPhoto,"oldmedia");
-              // Delete the old media photo
-              deleteFile(oldMediaPhoto);
-            }
-            // Update with the new media photo
-            templeData.mediaPageInfo = mediaphoto.map((data, index) => ({newMediaPhoto,  mediaPhoto: data}));
-          }
-        }
-      }
     }
-    // if (mediaphoto && mediaphoto.length > 0) {
-    //   console.log(mediaphoto,"mediphoto");
-    //   templeData.mediaPageInfo = mediaphoto.map((data, index) => ({...templeData.mediaPageInfo[index],  mediaPhoto: data}));
-    // }
+    if (templeData.mediaPageInfo && Array.isArray(templeData.mediaPageInfo)) {
+      templeData.mediaPageInfo.forEach((media, index) => {
+        const mediaPhotoFile = files.find(file => file.fieldname === `mediaPageInfo[${index}][mediaPhoto]`);
+        
+        if (mediaPhotoFile) {
+          deleteFile(existingTemple.mediaPageInfo[index].mediaPhoto);
+          templeData.mediaPageInfo[index].mediaPhoto = mediaPhotoFile.filename;
+        }
+      });
+    }
 
-  if (!templeData.commiteMemberInfo) {
+
+
+
+  if (templeData.commiteMemberInfo) {
     templeData.commiteMemberInfo = [];
+    if (templeData.commiteMemberInfo && Array.isArray(templeData.commiteMemberInfo)) {
+      templeData.commiteMemberInfo.forEach((media, index) => {
+        const memeberPhotoFile = files.find(file => file.fieldname === `commiteMemberInfo[${index}][memeberPhoto]`);
+        if (memeberPhotoFile) {
+          deleteFile(existingTemple.commiteMemberInfo[index].memeberPhoto);
+          templeData.commiteMemberInfo[index].memeberPhoto = memeberPhotoFile.filename;
+        }
+      });
+    }
   }
-  const commiteMemberPhoto = files.filter(file => file.fieldname.startsWith('commiteMemberInfo')).map(file => file.filename);
-  if (commiteMemberPhoto && commiteMemberPhoto.length > 0) {
-    templeData.commiteMemberInfo = commiteMemberPhoto.map((data, index) => ({
-      ...templeData.commiteMemberInfo[index], // Preserve existing properties if they exist
-      memeberPhoto: data, // Use 'memeberPhoto' as the fieldname
-    }));
-  }
+  
+  
   if (!templeData.barcode) {
     templeData.barcode = {};
   }
