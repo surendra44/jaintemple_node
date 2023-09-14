@@ -58,6 +58,16 @@ const templeDetailSchema = new mongoose.Schema({
       type: String,
     },
     _id:false
+  },{newstitle:{
+      type: String,
+    },
+    newsdescription:{
+      type: String,
+    },
+    newsmediaPhoto:{
+      type: String,
+    },
+    _id:false
   }],
   commiteMemberInfo:[{
     memeberName: {
@@ -108,6 +118,14 @@ const templeDetailSchema = new mongoose.Schema({
       type: String,
     },
     "barcode2":{
+      type: String,
+    },
+  },
+  artiTime: {
+    "normalTiming": {
+      type: String,
+    },
+    "eventTiming":{
       type: String,
     },
   },
