@@ -24,6 +24,10 @@ export const registerTemple = async (req, res) => {
     if (mediaphoto) {
       mediaphoto.map((data,index)=>templeData.mediaPageInfo[index].mediaPhoto= data )
     }
+    const newsmediaPhoto =  files.filter((file)=>file.fieldname.startsWith('newsPageInfo')).map((e)=>e.filename)
+    if (newsmediaPhoto) {
+      newsmediaPhoto.map((data,index)=>templeData.newsPageInfo[index].newsmediaPhoto= data )
+    }
     const commiteMemberphoto =  files.filter((file)=>file.fieldname.startsWith('commiteMemberInfo')).map((e)=>e.filename)
     if (commiteMemberphoto) {
     commiteMemberphoto.map((data,index)=>templeData.commiteMemberInfo[index].memeberPhoto= data )

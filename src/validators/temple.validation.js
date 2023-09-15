@@ -36,6 +36,13 @@ export const templeRegister =  {
             mediaPhoto: Joi.string().allow(""),
             })
         ),
+        newsPageInfo: Joi.array().items(
+        Joi.object({
+            newstitle: Joi.string().allow(""),
+            newsdescription: Joi.string().allow(""),
+            newsmediaPhoto: Joi.string().allow(""),
+            })
+        ),
         commiteMemberInfo: Joi.array().items(
             Joi.object({
             memeberName: Joi.string().allow(""),
@@ -75,7 +82,7 @@ export const templeRegister =  {
             maharajDescription: Joi.string().allow(""),
             maharajPhoto: Joi.string().allow(""),
             maharajTime: Joi.string().allow(""),
-            })
+            }),
         ),
     })
 };

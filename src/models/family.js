@@ -30,7 +30,7 @@ const familySchema = mongoose.Schema(
       trim: true,
       lowercase: true,
       unique: true,
-      required: true
+
     },
     occupation: {
       type: String,
