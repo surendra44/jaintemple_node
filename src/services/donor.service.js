@@ -8,12 +8,15 @@ export const registerDonor = async (userCreateadBy, members, mainDonarInfo) => {
   try {
     const existingDonor = await Donar.findOne({ email: mainDonarInfo.email });
     if (existingDonor) {
-      return { success: false, error: 'Donar Email address is already in use' };
+      return { success: false, error: `Donor email address '${mainDonarInfo.email}' is already in use` };
     }
-    const existingFamilymemeber = await Family.findOne({ email: mainDonarInfo.email });
-    if (existingFamilymemeber) {
-      return { success: false, error: 'member Email address is already in use' };
+    const memberEmails = members.map((member) => member.email);
+    const existingMemberEmails = await Family.distinct('email', { email: { $in: memberEmails } });
+    if (existingMemberEmails.length > 0) {
+      const existingEmails = existingMemberEmails.join(', ');
+      return { success: false, error: `Email address '${existingEmails}' are already in use by a member` };
     }
+
     const newMainUser = await Donar.create(mainDonarInfo);
     let createFamilyMember = [];
     if (members) {
