@@ -58,7 +58,9 @@ const templeDetailSchema = new mongoose.Schema({
       type: String,
     },
     _id:false
-  },{newstitle:{
+  }],
+  newsPageInfo:[{
+    newstitle:{
       type: String,
     },
     newsdescription:{

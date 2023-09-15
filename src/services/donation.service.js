@@ -556,8 +556,11 @@ export const totalByAllEventCategories = async (paginationOptions, filter, sortB
       .slice(skip, skip + (size || totalDocuments))
       .map(async (category) => {
         try {
-          // Find donations for the current event category
-          const donationsForCategory = await Donation.find(filter);
+          // Find donations for the current event category only
+          const donationsForCategory = await Donation.find({
+            ...filter,
+            eventCategoryId: category._id, // Assuming your donation schema has an eventCategory field
+          });
 
           // Calculate the total donation amount for the category
           const totalAmount = donationsForCategory.reduce(
@@ -597,6 +600,7 @@ export const totalByAllEventCategories = async (paginationOptions, filter, sortB
     throw new Error(e);
   }
 };
+
 
 
 
