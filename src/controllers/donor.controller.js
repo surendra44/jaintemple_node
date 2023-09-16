@@ -54,7 +54,7 @@ export const getAllDonors = async (req, res) => {
 
   const paginationOptions = {
     page: parseInt(page) || 1,
-    size: parseInt(size) 
+    size: parseInt(size) || 10
   };
 
   const donorfilter = {
@@ -74,7 +74,7 @@ export const getAllDonors = async (req, res) => {
 
   const sortingOptions = sort ? sort.split(",") : ["_id", "asc"];
   const sortBy = { [sortingOptions[0]]: sortingOptions[1] };
-  const result = await donorService.getAllDonorsWithMembers(paginationOptions,donorfilter,familyfilter,sortBy);
+  const result = await donorService.getAllDonorsWithMembers(paginationOptions,search,donorfilter,familyfilter,sortBy);
   return successResponse(req, res, result);
 } catch (error) {
   return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);

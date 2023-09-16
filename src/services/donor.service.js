@@ -189,81 +189,105 @@ export const changeUserStatus = async (id, status, parentornot) => {
   }
 };
 
+// export const getAllDonorsWithMembers = async (paginationOptions, donorfilter, familyfilter, sortBy) => {
+//   try {
+//     const { page, size } = paginationOptions;
+
+//     const totalDonorCount = await Donar.countDocuments(donorfilter);
+//     const totalFamiliesCount = await Family.countDocuments(familyfilter);
+//     const totalDocuments = totalDonorCount + totalFamiliesCount;
+//     const totalPages = Math.ceil(totalDocuments / size);
+//     const skip = (page - 1) * size;
+
+//     const donorsQuery = Donar.find(donorfilter).sort(sortBy).skip(skip).populate("members");
+
+//     // Check if size is provided and greater than 0, otherwise retrieve all documents
+//     if (size && size > 0) {
+//       donorsQuery.limit(size);
+//     }
+
+//     const donors = await donorsQuery;
+
+//     let result = donors;
+//     let familyLimit = 0;
+//     let familySkip = 0;
+
+//     if (donors.length < size) {
+//       const alreadyFetchedFamilyMembers = size - donors.length;
+//         const remainingFamilyRecords = totalFamiliesCount - alreadyFetchedFamilyMembers;
+//         familyLimit = Math.min(size, remainingFamilyRecords);
+//         familySkip = remainingFamilyRecords
+//           if (familySkip < 0) {
+//             familySkip = 0;
+//           }
+//         if (donors.length === 0) {
+//         familyLimit = size;
+//         familySkip = 0; // Start from the beginning of the family members
+//       }
+//     } else {
+//       familyLimit = 0; // No need to fetch family members on this page
+//       familySkip = 0;
+//     }
+
+//     const families = await Family.find(familyfilter).sort(sortBy).skip(familySkip).limit(familyLimit);
+
+//     if (result.length + families.length > size) {
+//       const remainingSpace = size - result.length;
+//       result = result.concat(families.slice(0, remainingSpace));
+//     } else {
+//       result = result.concat(families);
+//     }
+
+//     return {
+//       page,
+//       size,
+//       data: result,
+//       previousPage: page > 1 ? page - 1 : null,
+//       nextPage: page < totalPages ? page + 1 : null,
+//       totalDocuments,
+//     };
+//   } catch (e) {
+//     console.error(e);
+//     throw new Error(e);
+//   }
+// };
+  
+
 export const getAllDonorsWithMembers = async (paginationOptions, donorfilter, familyfilter, sortBy) => {
-  try {
-    const { page, size } = paginationOptions;
+    try {
+      const { page, size } = paginationOptions;
+      const donarData = await Donar.find(donorfilter);
+      const familyData = await Family.find(familyfilter);
+      const mandirUserData = [...donarData, ...familyData]
+      
+      const totalDocuments = mandirUserData.length;
+      const totalPages = Math.ceil(totalDocuments / size);
+      const startIndex = (page - 1) * size;
+      const endIndex = Math.min(startIndex + size, totalDocuments);
+    
+      
 
-    const totalDonorCount = await Donar.countDocuments(donorfilter);
-    const totalFamiliesCount = await Family.countDocuments(familyfilter);
-    const totalDocuments = totalDonorCount + totalFamiliesCount;
-    const totalPages = Math.ceil(totalDocuments / size);
-    const skip = (page - 1) * size;
+      const paginatedData = mandirUserData.slice(startIndex, endIndex);
 
-    const donorsQuery = Donar.find(donorfilter).sort(sortBy).skip(skip).populate("members");
 
-    // Check if size is provided and greater than 0, otherwise retrieve all documents
-    if (size && size > 0) {
-      donorsQuery.limit(size);
+     
+      console.log(donarData.length);
+      console.log(familyData.length);
+      console.log(mandirUserData);
+      return {
+        page,
+        size,
+        data: paginatedData,
+        previousPage: page > 1 ? page - 1 : null,
+        nextPage: page < totalPages ? page + 1 : null,
+        totalDocuments,
+      };
+  } 
+  catch (e) {
+      console.error(e);
+      throw new Error(e);
     }
-
-    const donors = await donorsQuery;
-
-    let result = donors;
-    let familyLimit = 0;
-    let familySkip = 0;
-
-    if (donors.length < size) {
-      if (donors.length === 0) {
-        // If there are no donors on this page, fetch family members with a limit of 'size' or the total number of families, whichever is smaller.
-        familyLimit = Math.min(size, totalFamiliesCount);
-        familySkip = 0; // Start from the beginning of the family members
-      } else {
-        // Calculate how many donor-related family members have already been fetched on previous pages
-        const alreadyFetchedFamilyMembers = (page - 1) * size * totalFamiliesCount;
-
-        // Calculate how many more family members to fetch to reach the 'size'
-        const remainingFamilyRecords = totalFamiliesCount - alreadyFetchedFamilyMembers;
-
-        if (remainingFamilyRecords > 0) {
-          familyLimit = Math.min(size, remainingFamilyRecords);
-          familySkip = (alreadyFetchedFamilyMembers % size) % totalFamiliesCount;
-
-          if (familySkip < 0) {
-            familySkip = 0; // Ensure familySkip is not negative
-          }
-        } else {
-          familyLimit = 0; // No more family members to fetch
-          familySkip = 0;
-        }
-      }
-    } else {
-      familyLimit = 0; // No need to fetch family members on this page
-      familySkip = 0;
-    }
-
-    const families = await Family.find(familyfilter).sort(sortBy).skip(familySkip).limit(familyLimit);
-
-    if (result.length + families.length > size) {
-      const remainingSpace = size - result.length;
-      result = result.concat(families.slice(0, remainingSpace));
-    } else {
-      result = result.concat(families);
-    }
-
-    return {
-      page,
-      size,
-      data: result,
-      previousPage: page > 1 ? page - 1 : null,
-      nextPage: page < totalPages ? page + 1 : null,
-      totalDocuments,
-    };
-  } catch (e) {
-    console.error(e);
-    throw new Error(e);
-  }
-};
-
+  };
 
 
 
