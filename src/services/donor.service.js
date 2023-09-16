@@ -255,8 +255,11 @@ export const changeUserStatus = async (id, status, parentornot) => {
 
 export const getAllDonorsWithMembers = async (paginationOptions, donorfilter, familyfilter, sortBy) => {
     try {
-      const { page, size } = paginationOptions;
-      const donarData = await Donar.find(donorfilter);
+      let { page, size } = paginationOptions;
+      console.log(page);
+      console.log(JSON.stringify(donorfilter));
+      console.log(JSON.stringify(familyfilter))
+      const donarData = await Donar.find(donorfilter).populate("members");
       const familyData = await Family.find(familyfilter);
       const mandirUserData = [...donarData, ...familyData]
       
@@ -271,9 +274,9 @@ export const getAllDonorsWithMembers = async (paginationOptions, donorfilter, fa
 
 
      
-      console.log(donarData.length);
-      console.log(familyData.length);
-      console.log(mandirUserData);
+      // console.log(donarData.length);
+      // console.log(familyData.length);
+      // console.log(mandirUserData);
       return {
         page,
         size,
