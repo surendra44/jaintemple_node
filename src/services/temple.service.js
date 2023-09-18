@@ -18,10 +18,10 @@ export const addtemple = async (templeData) =>{
 
   export const updateTemple= async (templeId, updatedData) =>{
       try {
-        const updatedTemple = await TempleDetail.findByIdAndUpdate(templeId,updatedData,
+        const updatedTemp = await TempleDetail.findByIdAndUpdate(templeId,updatedData,
           { new: true }
         );
-        return updatedTemple;
+        return updatedTemp;
     } catch (e) {
         console.log(e);
         throw new Error(e);

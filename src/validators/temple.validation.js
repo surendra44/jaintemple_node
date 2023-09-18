@@ -36,6 +36,13 @@ export const templeRegister =  {
             mediaPhoto: Joi.string().allow(""),
             })
         ),
+        blogPage: Joi.array().items(
+            Joi.object({
+            title: Joi.string().allow(""),
+            description: Joi.string().allow(""),
+            blogPhoto: Joi.string().allow(""),
+            })
+        ),
         newsPageInfo: Joi.array().items(
         Joi.object({
             newstitle: Joi.string().allow(""),

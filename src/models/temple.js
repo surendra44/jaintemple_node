@@ -123,6 +123,18 @@ const templeDetailSchema = new mongoose.Schema({
       type: String,
     },
   },
+  blogPageInfo:[{
+    title:{
+      type: String,
+    },
+    description:{
+      type: String,
+    },
+    blogPhoto:{
+      type: String,
+    },
+    _id:false
+  }],
   artiTime: {
     "normalTiming": {
       type: String,
