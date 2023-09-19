@@ -158,6 +158,45 @@ const templeDetailSchema = new mongoose.Schema({
     },
     _id:false
   }],
+  contactPageInfo:[{
+    name: {
+      type: String,
+    },
+    number:{
+      type: String,
+    },
+    email:{
+      type: String,
+    },
+    message:{
+      type: String,
+    },
+    _id:false
+  }],
+  eventPageInfo:[{
+    title: {
+      type: String,
+    },
+    description:{
+      type: String,
+    },
+    date:{
+      type: Date,
+    },
+    guest:{
+      type: String,
+    },
+    eventPhoto:{
+      type: String,
+    },
+    host:{
+      type: String,
+    },
+    rsvp:{
+      type: String,
+    },
+    _id:false
+  }],
 
 });
 

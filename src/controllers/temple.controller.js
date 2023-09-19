@@ -24,9 +24,9 @@ export const registerTemple = async (req, res) => {
     if (mediaphoto) {
       mediaphoto.map((data,index)=>templeData.mediaPageInfo[index].mediaPhoto= data )
     }
-    const blogphoto =  files.filter((file)=>file.fieldname.startsWith('blogPage')).map((e)=>e.filename)
+    const blogphoto =  files.filter((file)=>file.fieldname.startsWith('blogPageInfo')).map((e)=>e.filename)
     if (blogphoto) {
-      blogphoto.map((data,index)=>templeData.blogPage[index].blogphoto= data )
+      blogphoto.map((data,index)=>templeData.blogPageInfo[index].blogphoto= data )
     }
     const newsmediaPhoto =  files.filter((file)=>file.fieldname.startsWith('newsPageInfo')).map((e)=>e.filename)
     if (newsmediaPhoto) {
@@ -62,6 +62,10 @@ export const registerTemple = async (req, res) => {
     if (maharajJiphoto) {
       maharajJiphoto.map((data,index)=>templeData.maharajJiInfo[index].maharajPhoto= data )
     }
+    const eventphoto =  files.filter((file)=>file.fieldname.startsWith('eventPageInfo')).map((e)=>e.filename)
+    if (eventphoto) {
+      eventphoto.map((data,index)=>templeData.eventPageInfo[index].eventPhoto= data )
+    }
 
     const result = await templeService.addtemple(templeData);
     return successResponse(req, res, result);
@@ -86,19 +90,19 @@ const deleteFile = async (filePath) => {
 }
 
 
-
 export const updateTemple = async (req, res) => {
   const templeId = req.params.id;
   const files = req.files;
+  console.log(files);
   const templeData = req.body;
   const existingTemple = await templeService.getTempleById(templeId);
   try {
 
-     if (templeData.homepageInfo) {
+    if (templeData.homepageInfo) {
       if (typeof templeData.homepageInfo !== 'object') {
         templeData.homepageInfo = {};
       }
-
+    
       const homePhotoFile = files.find(file => file.fieldname === 'homepageInfo[homePhoto]');
       if (homePhotoFile) {
         if (existingTemple.homepageInfo.homePhoto !== templeData.homepageInfo.homePhoto) {
@@ -106,6 +110,8 @@ export const updateTemple = async (req, res) => {
         }
         templeData.homepageInfo.homePhoto = homePhotoFile.filename;
       }
+    } else {
+      templeData.homepageInfo = undefined; // Set it to undefined if it doesn't exist in the updated data
     }
 
     if (templeData.mediaPageInfo) {
@@ -124,28 +130,38 @@ export const updateTemple = async (req, res) => {
     }
 
 
-    if (templeData.artiTime) {
-      if (typeof templeData.artiTime !== 'object') {
-        templeData.artiTime = {};
-      }
-
-      const normalTimingFile = files.find(file => file.fieldname === 'artiTime[normalTiming]');
-      if (normalTimingFile) {
-        if (existingTemple.artiTime.normalTiming !== templeData.artiTime.normalTiming) {
-          deleteFile(existingTemple.artiTime.normalTiming);
+    if (Array.isArray(files)) {
+      // Iterate through each file object in the array
+      files.forEach(file => {
+        if (file.fieldname.startsWith('artiTime')) {
+          // Check if the fieldname starts with 'artiTime'
+          const fieldnameParts = file.fieldname.split('['); // Split the fieldname by '['
+          const timingType = fieldnameParts[1].slice(0, -1); // Get the timing type (either 'normalTiming' or 'eventTiming')
+    
+          // Initialize templeData.artiTime as an empty object if it doesn't exist
+          if (!templeData.artiTime) {
+            templeData.artiTime = {};
+          }
+    
+          // Process the file based on timingType
+          if (timingType === 'normalTiming') {
+            if (existingTemple.artiTime && existingTemple.artiTime.normalTiming !== file.filename) {
+              deleteFile(existingTemple.artiTime.normalTiming);
+            }
+            templeData.artiTime.normalTiming = file.filename;
+          } else if (timingType === 'eventTiming') {
+            if (existingTemple.artiTime && existingTemple.artiTime.eventTiming !== file.filename) {
+              deleteFile(existingTemple.artiTime.eventTiming);
+            }
+            templeData.artiTime.eventTiming = file.filename;
+          }
         }
-        templeData.artiTime.normalTiming = normalTimingFile.filename;
-      }
-
-      const eventTimingFile = files.find(file => file.fieldname === 'artiTime[eventTiming]');
-      if (eventTimingFile) {
-        if (existingTemple.artiTime.eventTiming !== templeData.artiTime.eventTiming) {
-          deleteFile(existingTemple.artiTime.eventTiming);
-        }
-        templeData.artiTime.eventTiming = eventTimingFile.filename;
-      }
+      });
+    } else {
+      templeData.artiTime = undefined;
     }
-
+    
+    
 
     if (templeData.blogPageInfo) {
       templeData.blogPageInfo.forEach((blog, index) => {
@@ -199,27 +215,37 @@ export const updateTemple = async (req, res) => {
     }
   
   
-    if (templeData.barcode) {
-      if (!existingTemple.barcode) {
-        existingTemple.barcode = {};
-      }
-      
-      const barcodephoto1 = files.find(file => file.fieldname === 'barcode[barcode1]');
-      if (barcodephoto1) {
-        if (existingTemple.barcode.barcode1 !== barcodephoto1.filename) {
-          deleteFile(existingTemple.barcode.barcode1);
+    if (Array.isArray(files)) {
+      // Iterate through each file object in the array
+      files.forEach(file => {
+        if (file.fieldname.startsWith('barcode')) {
+          // Check if the fieldname starts with 'barcode'
+          const fieldnameParts = file.fieldname.split('['); // Split the fieldname by '['
+          const barcodeType = fieldnameParts[1].slice(0, -1); // Get the barcode type (e.g., 'barcode1' or 'barcode2')
+    
+          // Initialize templeData.barcode as an empty object if it doesn't exist
+          if (!templeData.barcode) {
+            templeData.barcode = {};
+          }
+    
+          // Process the file based on barcodeType
+          if (barcodeType === 'barcode1') {
+            if (existingTemple.barcode && existingTemple.barcode.barcode1 !== file.filename) {
+              deleteFile(existingTemple.barcode.barcode1);
+            }
+            templeData.barcode.barcode1 = file.filename;
+          } else if (barcodeType === 'barcode2') {
+            if (existingTemple.barcode && existingTemple.barcode.barcode2 !== file.filename) {
+              deleteFile(existingTemple.barcode.barcode2);
+            }
+            templeData.barcode.barcode2 = file.filename;
+          }
         }
-        templeData.barcode.barcode1 = barcodephoto1.filename;
-      }
-      
-      const barcodephoto2 = files.find(file => file.fieldname === 'barcode[barcode2]');
-      if (barcodephoto2) {
-        if (existingTemple.barcode.barcode2 !== barcodephoto2.filename) {
-          deleteFile(existingTemple.barcode.barcode2);
-        }
-        templeData.barcode.barcode2 = barcodephoto2.filename;
-      }
+      });
+    } else {
+      templeData.barcode = undefined;
     }
+    
 
     if (templeData.maharajJiInfo) {
       if (!Array.isArray(templeData.maharajJiInfo)) {
@@ -241,15 +267,35 @@ export const updateTemple = async (req, res) => {
     }
 
 
-      const result = await templeService.updateTemple(templeId, templeData);
+    if (templeData.eventPageInfo) {
+      if (!Array.isArray(templeData.eventPageInfo)) {
+        templeData.eventPageInfo = [];
+      }
+    
+      templeData.eventPageInfo.forEach((evnet, index) => {
+        const eventPhotoFile = files.find(file => file.fieldname === `eventPageInfo[${index}][eventPhoto]`);
+        if (eventPhotoFile) {
+          if (!existingTemple.eventPageInfo[index]) {
+            existingTemple.eventPageInfo[index] = {};
+          }
+          if (existingTemple.eventPageInfo[index].eventPhoto !== eventPhotoFile.filename) {
+            deleteFile(existingTemple.eventPageInfo[index].eventPhoto);
+          }
+          templeData.eventPageInfo[index].eventPhoto = eventPhotoFile.filename;
+        }
+      });
+    }
+
+
+   const updateData = {
+      $set: templeData,
+    };
+      const result = await templeService.updateTemple(templeId, updateData);
       return successResponse(req, res, result);
     } catch (error) {
         return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
       }
-
-  };
-
-
+  }
 
 
 

@@ -36,7 +36,7 @@ export const templeRegister =  {
             mediaPhoto: Joi.string().allow(""),
             })
         ),
-        blogPage: Joi.array().items(
+        blogPageInfo: Joi.array().items(
             Joi.object({
             title: Joi.string().allow(""),
             description: Joi.string().allow(""),
@@ -91,5 +91,25 @@ export const templeRegister =  {
             maharajTime: Joi.string().allow(""),
             }),
         ),
+        contactPageInfo: Joi.array().items(
+            Joi.object({
+                name: Joi.string().allow(""),
+                number: Joi.string().allow(""),
+                email: Joi.string().allow(""),
+                message:Joi.string().allow(""),
+            }),
+        ),
+        eventPageInfo: Joi.array().items(
+            Joi.object({
+                title: Joi.string().allow(""),
+                description: Joi.string().allow(""),
+                eventPhoto:Joi.string().allow(""),
+                date: Joi.date().iso().allow(""),
+                guest:Joi.string().allow(""),
+                host:Joi.string().allow(""),
+                rsvp:Joi.string().allow(""),
+            }),
+        ),
     })
 };
+ 
