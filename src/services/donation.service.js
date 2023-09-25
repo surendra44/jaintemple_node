@@ -75,8 +75,8 @@ export const sendRecipt = async (donationId) => {
     const { pdfBuffer } = await generatePDFReceipt(dynamicData); // Destructure the result
     return pdfBuffer ;
   } catch (e) {
-    console.error(e);
-    res.status(500).send('Error processing donation');
+    console.log(e);
+    throw new Error(e);
   }
 };
 
