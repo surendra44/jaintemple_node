@@ -388,7 +388,8 @@ return successResponse(req, res, secondhigh);
 
 export const downloadPdf= async(req,res) =>{
   try{
-    const url = "http://localhost:8000/receipts/donation_receipt.pdf"
+    const donationID = req.params.id;
+    const url = `https://jaintemple.onrender.com/receipts/donation_receipt_${donationID}.pdf`
    res.send({url});
   } catch (error) {
     return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
