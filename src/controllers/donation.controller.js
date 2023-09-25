@@ -384,3 +384,14 @@ return successResponse(req, res, secondhigh);
   }
 };
 
+
+export const downloadPdf= async(req,res) =>{
+  try{
+    res.setHeader('Content-Disposition', 'attachment; filename="donation_receipt.pdf"');
+    res.setHeader('Content-Type', 'application/pdf');
+    const url = "https://jaintemple.onrender.com/receipts/donation_receipt.pdf"
+   return successResponse(req, res, url);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
