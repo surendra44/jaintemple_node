@@ -35,6 +35,7 @@ router.get('/totalCashBalance',verifyToken.checkSuperAdmin,donationController.to
 router.get('/totalOnlineBalance',verifyToken.checkSuperAdmin,donationController.totalOnlineBalance);
 router.post('/expense-and-donaion',verifyToken.checkSuperAdmin,donationController.totalMothBalance);
 router.get('/top15MaxDonar',verifyToken.checkSuperAdmin,donationController.top15MaxDonar);
+router.get('/secondhigestDonation',verifyToken.checkSuperAdmin,donationController.secondhighestDonation);
 
 
 
