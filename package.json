@@ -71,6 +71,7 @@
     "path": "^0.12.7",
     "pdf-lib": "^1.17.1",
     "pdfkit": "^0.13.0",
+    "phantomjs-prebuilt": "^2.1.16",
     "serverless-http": "^3.0.1",
     "soft-delete-plugin-mongoose": "^1.0.15",
     "sqs-consumer": "^5.6.0",
@@ -79,6 +80,7 @@
     "uuid": "^8.3.2",
     "wbm": "^1.1.16",
     "winston": "^3.6.0",
+    "wkhtmltopdf": "^0.4.0",
     "xirr": "^1.1.0",
     "xss-clean": "^0.1.1"
   },
