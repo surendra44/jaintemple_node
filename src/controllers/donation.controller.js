@@ -388,16 +388,32 @@ return successResponse(req, res, secondhigh);
 
 export const downloadPdf= async(req,res) =>{
   try{
-    const pdfUrl = "https://jaintemple.onrender.com/receipts/donation_receipt.pdf";
-    const response = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
-
-    // Set response headers
-    res.setHeader('Content-Disposition', 'attachment; filename="donation_receipt.pdf"');
-    res.setHeader('Content-Type', 'application/pdf');
-
-
-   return successResponse(req, res, response.data);
+    const donationID = req.params.id;
+    const url = `https://jaintemple.onrender.com/receipts/donation_receipt_${donationID}.pdf`
+   res.send({url});
   } catch (error) {
     return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
   }
 };
+
+
+
+
+// export const downloadPdf = async (req, res) => {
+//   try {
+//     const pdfUrl = "https://localhost:8000/receipts/donation_receipt.pdf";
+
+//     // Fetch the PDF file as a binary stream
+//     const response = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
+
+//     // Set response headers for file download
+//     res.setHeader('Content-Disposition', 'attachment; filename="donation_receipt.pdf"');
+//     res.setHeader('Content-Type', 'application/pdf');
+
+//     // Send the binary data directly in the response
+//     res.send(Buffer.from(response.data, 'binary'));
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).send('Error downloading PDF');
+//   }
+// };

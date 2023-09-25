@@ -65,6 +65,7 @@ export const sendRecipt = async (donationId) => {
     const dynamicData = {
       templeName: donationDetail.templeId.name,
       templeAddress: templeAddress,
+      donationId:donationDetail._id,
       donorName: donationDetail.donarId.firstName,
       donarAmount: donationDetail.donationAmount,
       mode: donationDetail.donationMode,
@@ -97,8 +98,8 @@ const generatePDFReceipt = async (dynamicData) => {
 
 
     // Save the PDF to a file
-    // fs.writeFileSync(path.join(__dirname, '../template/donation_receipt.pdf'), pdfBuffer);
-    fs.writeFileSync(path.join(__dirname, '../../receipts/donation_receipt.pdf'), pdfBuffer);
+    // fs.writeFileSync(path.join(__dirname, '../../receipts/donation_receipt.pdf'), pdfBuffer);
+    fs.writeFileSync(path.join(__dirname, `../../receipts/donation_receipt_${dynamicData.donationId}.pdf`), pdfBuffer);
 
     return { dynamicData, pdfBuffer };
   } catch (e) {
