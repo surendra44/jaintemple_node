@@ -5,12 +5,14 @@ const EventCategory = require("../models/eventCategory");
 const ExpenseDetail = require('../models/expenseDetail');
 const EventDetail = require('../models/eventDetail');
 // const wbm = require('wbm');
-import pdf from 'html-pdf';
 import ejs from 'ejs';
 import path from 'path';
 import * as fs from 'fs-extra';
 import axios from "axios";
 import { ERROR_MESSAGE } from "../helpers/errorMessage";
+
+import * as html_to_pdf from 'html-pdf-node';
+
 
 
 
@@ -83,22 +85,20 @@ export const sendRecipt = async (donationId) => {
 const generatePDFReceipt = async (dynamicData) => {
   try {
     const html = await ejs.renderFile(path.join(__dirname, '../template/billing.ejs'), { data: dynamicData });
-
+    let options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox'] };
     const pdfBuffer = await new Promise((resolve, reject) => {
-      pdf.create(html).toBuffer((err, buffer) => {
-        if (err) {
+      html_to_pdf.generatePdf({content:html},options).then(buffer => {
+        console.log("PDF Buffer:-", buffer);
+        resolve(buffer)}).catch(err=>{
           console.error(err);
           reject('Error generating PDF');
-        } else {
-          resolve(buffer);
-        }
       });
     });
-
+    
 
     // Save the PDF to a file
     // fs.writeFileSync(path.join(__dirname, '../../receipts/donation_receipt.pdf'), pdfBuffer);
-    await fs.writeFileSync(path.join(__dirname, `../../receipts/donation_receipt_${dynamicData.donationId.toString()}.pdf`), pdfBuffer);
+     fs.writeFileSync(path.join(__dirname, `../../receipts/donation_receipt_${dynamicData.donationId.toString()}.pdf`), pdfBuffer);
 
     return { dynamicData, pdfBuffer };
   } catch (e) {
