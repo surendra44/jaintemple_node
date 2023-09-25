@@ -3,6 +3,7 @@ import httpStatus from "http-status";
 import { successResponse, errorResponse } from "../helpers";
 const { donationService } = require('../services');
 const Donation = require("../models/donationDetail");
+import axios from 'axios'; 
 
 
 
@@ -387,10 +388,15 @@ return successResponse(req, res, secondhigh);
 
 export const downloadPdf= async(req,res) =>{
   try{
+    const pdfUrl = "https://jaintemple.onrender.com/receipts/donation_receipt.pdf";
+    const response = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
+
+    // Set response headers
     res.setHeader('Content-Disposition', 'attachment; filename="donation_receipt.pdf"');
     res.setHeader('Content-Type', 'application/pdf');
-    const url = "https://jaintemple.onrender.com/receipts/donation_receipt.pdf"
-   return successResponse(req, res, url);
+
+
+   return successResponse(req, res, response.data);
   } catch (error) {
     return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
   }
