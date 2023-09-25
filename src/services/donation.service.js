@@ -73,7 +73,7 @@ export const sendRecipt = async (donationId) => {
       data
     }
     const { pdfBuffer } = await generatePDFReceipt(dynamicData); // Destructure the result
-    return  dynamicData ;
+    return pdfBuffer ;
   } catch (e) {
     console.error(e);
     res.status(500).send('Error processing donation');
@@ -94,11 +94,11 @@ const generatePDFReceipt = async (dynamicData) => {
         }
       });
     });
-    res.setHeader('Content-Disposition', 'attachment; filename="donation_receipt.pdf"');
-    res.setHeader('Content-Type', 'application/pdf');
+
 
     // Save the PDF to a file
-    fs.writeFileSync(path.join(__dirname, '../template/donation_receipt.pdf'), pdfBuffer);
+    // fs.writeFileSync(path.join(__dirname, '../template/donation_receipt.pdf'), pdfBuffer);
+    fs.writeFileSync(path.join(__dirname, '../../receipts/donation_receipt.pdf'), pdfBuffer);
 
     return { dynamicData, pdfBuffer };
   } catch (e) {
@@ -106,6 +106,8 @@ const generatePDFReceipt = async (dynamicData) => {
     throw new Error('Error generating or saving PDF');
   }
 };
+
+
 
 
 
