@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 import httpStatus from "http-status";
 import { successResponse, errorResponse } from "../helpers";
 const { donationService } = require('../services');
+const Donation = require("../models/donationDetail");
+
 
 
 export const addDonation = async (req, res) => {
@@ -363,3 +365,21 @@ export const top15MaxDonar = async (req, res) => {
 };
 
 
+export const secondhighestDonation = async(req,res) =>{
+  try{
+    
+const secondhigehst = await Donation.find().sort({"donationAmount":-1}).skip(1).limit(1)
+const secondhigh = await Donation.aggregate([
+  {$group:{_id:"$donationAmount"}},
+  {$sort: {_id:-1}},
+  {$skip: 1},
+  {$limit:1}
+])
+
+// const secondhigh = JSON.stringify(secondhigehst)
+// console.log(JSON.stringify(secondhigehst))
+return successResponse(req, res, secondhigh);
+  } catch (error) {
+    return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};

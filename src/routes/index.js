@@ -8,7 +8,9 @@ import expCatRoutes from "./expensesCategory";
 import expenseRoute from "./expense";
 import dailyEventRoute from "./dailyEvent";
 import templeRoute from "./temple";
+import jainBookRouter from "./jainBooks";
 import { dailyEventService } from "../services";
+import { JainBook } from "../models";
 
 const router = express.Router();
 
@@ -21,5 +23,6 @@ router.use("/expensecat",  expCatRoutes);
 router.use("/expense",  expenseRoute);
 router.use("/dailyEvent", dailyEventRoute);
 router.use("/temple", templeRoute);
+router.use("/jainBook",jainBookRouter);
 
 export default router;

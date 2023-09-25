@@ -19,7 +19,7 @@ export const addDonation = async (donationDetail) => {
   try {
     const newDonation = await Donation.create(donationDetail);
     const result = await getDoationById(newDonation._id);
-    // const receipt = await sendRecipt(result._id);
+    const receipt = await sendRecipt(result._id);
     return result;
   } catch (e) {
     console.log(e);
@@ -94,6 +94,8 @@ const generatePDFReceipt = async (dynamicData) => {
         }
       });
     });
+    res.setHeader('Content-Disposition', 'attachment; filename="donation_receipt.pdf"');
+    res.setHeader('Content-Type', 'application/pdf');
 
     // Save the PDF to a file
     fs.writeFileSync(path.join(__dirname, '../template/donation_receipt.pdf'), pdfBuffer);
