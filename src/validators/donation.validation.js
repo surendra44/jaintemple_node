@@ -7,7 +7,12 @@ export const createDonation = {
   }),
   body: Joi.object().keys({
     eventId: Joi.custom(objectId).allow(null),
-    eventCategoryId: Joi.custom(objectId).allow(null),
+    eventCategory: Joi.array().items(
+      Joi.object().keys({
+        eventCategoryId: Joi.custom(objectId).allow(null),
+        donateEventAmount: Joi.number().allow(""),
+      })
+    ),
     donationMode: Joi.string().required(),
     donationAmount: Joi.number().required(),
     donationStatus: Joi.string().required(),

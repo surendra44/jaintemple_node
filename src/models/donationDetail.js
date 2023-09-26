@@ -10,10 +10,8 @@ const donationSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'EventDetail', 
   },
-  eventCategoryId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'EventCategory', 
-  },
+  eventCategory :[{ eventCategoryId:{
+    type: mongoose.Schema.Types.ObjectId,ref: 'EventCategory'},donateEventAmount:Number}], 
   dailyEvent :[{ dailyEventCategory:{
     type: mongoose.Schema.Types.ObjectId,ref: 'dailyCategoryEvent'},donateEventAmount:Number}], 
   templeId: {

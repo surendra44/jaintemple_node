@@ -181,7 +181,6 @@ export const getDoationById = async (donationId) => {
     const event = await Donation.findById(donationId)
       .populate("donarId")
       .populate("eventId")
-      .populate("eventCategoryId")
       .populate("templeId");
     if (!event) throw new Error(ERROR_MESSAGE.DONATION.GetID);
     return event;
