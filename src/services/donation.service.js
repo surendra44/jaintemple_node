@@ -54,7 +54,8 @@ export const sendRecipt = async (donationId) => {
       const transactions = donationDetail.dailyEvent;
       data = transactions.map((transaction) => ({ name: getCategoryName(dailyCategories, transaction.dailyEventCategory), amount: transaction.donateEventAmount }))
     } else {
-      data = [{ amount: donationDetail.donationAmount, name:donationDetail.eventCategoryId ? getCategoryName(categories, donationDetail.eventCategoryId):''}];
+      const transactions = donationDetail.eventCategory;
+      data = transactions.map((transaction) => ({ name: getCategoryName(categories, transaction.eventCategoryId), amount: transaction.donateEventAmount }))
     }
     const templeAddress = [
       donationDetail.templeId.address.line_1,
