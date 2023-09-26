@@ -4,6 +4,7 @@ const Donar = require('../models/donar');
 const Family = require('../models/family');
 import { successResponse, errorResponse } from "../helpers";
 const { donorService } = require('../services');
+const {donationService} = require('../services')
 
 
 export const registerDonor = async (req, res) => {
@@ -25,6 +26,7 @@ export const registerGuest = async (req, res) => {
   try {
     const mainDonarInfo = { ...rest, createdBy: new mongoose.Types.ObjectId(userCreateadBy), updatedBy: new mongoose.Types.ObjectId(userCreateadBy) };
     const result = await donorService.registerGuest({...donation,templeId},mainDonarInfo);
+    const receipt = await donationService.sendRecipt(result._id);
     return successResponse(req, res, result);
   } catch (error) {
       return errorResponse(req, res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
