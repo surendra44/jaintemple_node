@@ -204,7 +204,7 @@ export const getallDonation = async (paginationOptions,filter,sortBy) => {
       .skip(skip)
       .limit(size)
       .populate("eventId")
-      .populate("eventCategoryId")
+      .populate("eventCategory.eventCategoryId")
       .populate("donarId");
 
     return {
@@ -235,7 +235,7 @@ export const  getallPendingDonation = async (paginationOptions,filter,sortBy) =>
       .skip(skip)
       .limit(size)
       .populate("eventId")
-      .populate("eventCategoryId")
+      .populate("eventCategory.eventCategoryId")
       .populate("donarId");
 
     return {
@@ -563,7 +563,7 @@ export const totalByAllEventCategories = async (paginationOptions, filter, sortB
           // Find donations for the current event category only
           const donationsForCategory = await Donation.find({
             ...filter,
-            eventCategoryId: category._id, // Assuming your donation schema has an eventCategory field
+            "eventCategory.eventCategoryId": category._id, // Assuming your donation schema has an eventCategory field
           });
 
           // Calculate the total donation amount for the category
@@ -612,7 +612,7 @@ export const totalbyEventCategory = async (eventCategoryId) => {
   try {
     const data = await Donation.find({
       donationStatus: "Complete",
-      eventCategoryId: eventCategoryId,
+      "eventCategory.eventCategoryId": eventCategoryId,
     });
 
     let totalAmount = 0;
