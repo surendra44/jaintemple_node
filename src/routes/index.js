@@ -1,6 +1,7 @@
 import express from "express";
 import userRoutes from "./user";
 import roleRoutes from "./role";
+import tithiRoutes from "./tithi";
 import donorRoutes from "./donor";
 import eventRoutes from "./event";
 import donationRoutes from "./donation";
@@ -24,5 +25,6 @@ router.use("/expense",  expenseRoute);
 router.use("/dailyEvent", dailyEventRoute);
 router.use("/temple", templeRoute);
 router.use("/jainBook",jainBookRouter);
+router.use("/tithi",tithiRoutes);
 
 export default router;
